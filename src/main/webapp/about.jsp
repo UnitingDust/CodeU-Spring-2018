@@ -38,9 +38,20 @@
 
       <h1>About the CodeU Chat App</h1>
       <p>
-        This is an example chat application designed to be a starting point
-        for your CodeU project team work. Here's some stuff to think about:
-      </p>
+        This chat app was created by CodeU Team 32 to make connecting with friends and family more fun!!
+
+       <li><strong> Lets meet the team: </strong></li>
+
+        <li>Jessica: from Princeton New Jersey, originally grew up in Edison, New Jersey. She hopes to really get technical experience working with the team and learn from everyone's ideas, thought processes, and problem-solving methods. </li>
+
+       <li> Isabella: from State College, Pennsylvania, is originally from Pittsburgh, Pennsylvania. She is excited to have the opportunity to strengthen my programming, problem solving, and creativity skills and meet new people with a similar passion to herself. </li>
+
+        <li>Angel Chen: from Bethlehem,(but actually from Philadelphia, PA) hopes to discover what it is like to work on a big project with other people and to improve skills as a Software Developer in general. </li>
+
+        <li>Johanna: from South Hadley, Massachusetts is originally from Jamaica and currently live in Miami and goes to school in Western Massachusetts. In this CodeU program, she hopes to gain technical experience, discover what its like to like to collaborate on a big project, improve her software developing skills, meet new people, and just overall learn new things </li>
+
+
+              </p>
 
       <ul>
         <li><strong>Algorithms and data structures:</strong> We've made the app
