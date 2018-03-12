@@ -8,7 +8,7 @@ import javax.servlet.http.HttpServletResponse;
 
 /**
  * Servlet class responsible for user registration.
- */
+ **/
 
  public class RegisterServlet extends HttpServlet {
     @Override

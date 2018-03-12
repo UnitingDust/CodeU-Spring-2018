@@ -25,7 +25,7 @@ public class RegisterServletTest {
         Mockito.when(mockResponse.getWriter()).thenReturn(mockPrintWriter);
     }
 
- @Test
+    @Test
  public void testDoGet() throws IOException, ServletException {
    registerServlet.doGet(mockRequest, mockResponse);
 
