@@ -57,24 +57,29 @@ void setUserStore(UserStore userStore) {
  public void doPost(HttpServletRequest request, HttpServletResponse response)
      throws IOException, ServletException {
 
+    //stores the user name and passwords as strings
    String username = request.getParameter("username");
    String password = request.getParameter("password");
    String passwordHash = BCrypt.hashpw(password, BCrypt.gensalt());
 
+   //if the user name is contains symbols, it should be an error
    if (!username.matches("[\\w*\\s*]*")) {
      request.setAttribute("error", "Please enter only letters, numbers, and spaces.");
      request.getRequestDispatcher("/WEB-INF/view/register.jsp").forward(request, response);
      return;
    }
 
+   //if the user name is already taken,prompts user to registration page
    if (userStore.isUserRegistered(username)) {
      request.setAttribute("error", "That username is already taken.");
      request.getRequestDispatcher("/WEB-INF/view/register.jsp").forward(request, response);
      return;
    }
    
+
   User user = new User(UUID.randomUUID(), username, passwordHash, Instant.now());
   userStore.addUser(user);
+
 
    response.sendRedirect("/login");
  
