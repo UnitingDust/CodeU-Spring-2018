@@ -18,45 +18,12 @@ import javax.servlet.http.HttpServletResponse;
 */
 public class RegisterServlet extends HttpServlet {
 
-	 /**
+   /**
   * Store class that gives access to Users.
   */
  private UserStore userStore;
 
- @Override
- public void doGet(HttpServletRequest request, HttpServletResponse response)
-     throws IOException, ServletException {
 
-   request.getRequestDispatcher("/WEB-INF/view/register.jsp").forward(request, response);
- }
-
- @Override
- public void doPost(HttpServletRequest request, HttpServletResponse response)
-     throws IOException, ServletException {
-
-   String username = request.getParameter("username");
-   String password = request.getParameter("password");
-
-   if (!username.matches("[\\w*\\s*]*")) {
-     request.setAttribute("error", "Please enter only letters, numbers, and spaces.");
-     request.getRequestDispatcher("/WEB-INF/view/register.jsp").forward(request, response);
-     return;
-   }
-
-   if (userStore.isUserRegistered(username)) {
-     request.setAttribute("error", "That username is already taken.");
-     request.getRequestDispatcher("/WEB-INF/view/register.jsp").forward(request, response);
-     return;
-   }
-
-   User user = new User(UUID.randomUUID(), username, password, Instant.now());
-   userStore.addUser(user);
-
-   response.sendRedirect("/login");
- }
-
-
- 
  /**
   * Set up state for handling registration-related requests. This method is only called when
   * running in a server, not when running in a test.
@@ -71,7 +38,49 @@ public class RegisterServlet extends HttpServlet {
   * Sets the UserStore used by this servlet. This function provides a common setup method
   * for use by the test framework or the servlet's init() function.
   */
- void setUserStore(UserStore userStore) {
+void setUserStore(UserStore userStore) {
    this.userStore = userStore;
  }
+
+ /*
+ This function forwards user request to the register page
+ */
+ @Override
+ public void doGet(HttpServletRequest request, HttpServletResponse response)
+     throws IOException, ServletException {
+
+   request.getRequestDispatcher("/WEB-INF/view/register.jsp").forward(request, response);
+ }
+
+ @Override
+ public void doPost(HttpServletRequest request, HttpServletResponse response)
+     throws IOException, ServletException {
+
+    //stores the user name and passwords as strings
+   String username = request.getParameter("username");
+   String password = request.getParameter("password");
+
+   //if the user name is contains symbols, it should be an error
+   if (!username.matches("[\\w*\\s*]*")) {
+     request.setAttribute("error", "Please enter only letters, numbers, and spaces.");
+     request.getRequestDispatcher("/WEB-INF/view/register.jsp").forward(request, response);
+     return;
+   }
+
+   //if the user name is already taken,prompts user to registration page
+   if (userStore.isUserRegistered(username)) {
+     request.setAttribute("error", "That username is already taken.");
+     request.getRequestDispatcher("/WEB-INF/view/register.jsp").forward(request, response);
+     return;
+   }
+   
+   //if not, creates the user 
+   User user = new User(UUID.randomUUID(), username, password, Instant.now());
+   userStore.addUser(user);
+   //forwards to login page
+   response.sendRedirect("/login");
+ 
+
+ }
+
 }

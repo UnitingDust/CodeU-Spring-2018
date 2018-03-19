@@ -5,9 +5,14 @@ import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import org.junit.Before;
+import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mockito;
+import codeu.model.data.User;
+import codeu.model.store.basic.UserStore;
+import org.mockito.ArgumentCaptor;
 
 public class RegisterServletTest {
 
@@ -32,4 +37,74 @@ public class RegisterServletTest {
 
    Mockito.verify(mockRequestDispatcher).forward(mockRequest, mockResponse);
  }
+
+
+ @Test
+ public void testDoPost_BadUsername() throws IOException, ServletException{
+ 
+    Mockito.when(mockRequest.getParameter("username")).thenReturn("bad !@#$% username");
+
+    registerServlet.doPost(mockRequest, mockResponse);
+    //ensures that a bad user name is a error with a message
+    Mockito.verify(mockRequest)
+        .setAttribute("error", "Please enter only letters, numbers, and spaces.");
+    Mockito.verify(mockRequestDispatcher).forward(mockRequest, mockResponse);
+ }
+
+
+ @Test 
+ public void testDoPost_NewUserRegistration() throws IOException, ServletException{
+     
+     Mockito.when(mockRequest.getParameter("username")).thenReturn("test username");
+
+    UserStore mockUserStore = Mockito.mock(UserStore.class);
+    //returns false if is a new user
+    Mockito.when(mockUserStore.isUserRegistered("test username")).thenReturn(false);
+    //if the user is not already registered, set up the user accoount
+    registerServlet.setUserStore(mockUserStore);
+
+    HttpSession mockSession = Mockito.mock(HttpSession.class);
+    Mockito.when(mockRequest.getSession()).thenReturn(mockSession);
+
+    registerServlet.doPost(mockRequest, mockResponse);
+   
+   //stores the user objects created
+    ArgumentCaptor<User> userArgumentCaptor = ArgumentCaptor.forClass(User.class);
+
+    //verifies that the user added is "test username"
+    Mockito.verify(mockUserStore).addUser(userArgumentCaptor.capture());
+    Assert.assertEquals(userArgumentCaptor.getValue().getName(), "test username");
+
+    mockSession.setAttribute("user", "test username");
+
+    Mockito.verify(mockSession).setAttribute("user", "test username");
+    //if the user is already registered, they should be forwarded to the login page
+    Mockito.verify(mockResponse).sendRedirect("/login");
+ }
+ 
+
+ @Test
+ public void testDoPost_RegisteredUser() throws IOException, ServletException{
+    Mockito.when(mockRequest.getParameter("username")).thenReturn("test username");
+
+    UserStore mockUserStore = Mockito.mock(UserStore.class);
+    //returns true if user is already registered
+    Mockito.when(mockUserStore.isUserRegistered("test username")).thenReturn(true);
+    registerServlet.setUserStore(mockUserStore);
+
+    HttpSession mockSession = Mockito.mock(HttpSession.class);
+    Mockito.when(mockRequest.getSession()).thenReturn(mockSession);
+
+    registerServlet.doPost(mockRequest, mockResponse);
+
+    Mockito.verify(mockUserStore, Mockito.never()).addUser(Mockito.any(User.class));
+
+    mockSession.setAttribute("user","test username");
+
+    Mockito.verify(mockSession).setAttribute("user", "test username");
+    mockResponse.sendRedirect("/login");
+
+    Mockito.verify(mockResponse).sendRedirect("/login");
+ }
+
 }
