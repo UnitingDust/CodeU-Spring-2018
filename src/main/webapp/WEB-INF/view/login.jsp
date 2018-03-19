@@ -27,16 +27,27 @@
 </head>
 <body>
 
+<<<<<<< HEAD
+<nav>
+=======
  <nav>
+>>>>>>> 3ea292d2d8d514f8918b29a2937b5828b693d752
    <a id="navTitle" href="/">CodeU Chat App</a>
    <a href="/conversations">Conversations</a>
    <% if(request.getSession().getAttribute("user") != null){ %>
      <a>Hello <%= request.getSession().getAttribute("user") %>!</a>
    <% } else{ %>
      <a href="/login">Login</a>
+<<<<<<< HEAD
+     <a href="/register">Register</a>
+   <% } %>
+   <a href="/about.jsp">About</a>
+ </nav> 
+=======
    <% } %>
    <a href="/about">About</a>
  </nav>
+>>>>>>> 3ea292d2d8d514f8918b29a2937b5828b693d752
 
  <div id="container">
    <h1>Login</h1>
