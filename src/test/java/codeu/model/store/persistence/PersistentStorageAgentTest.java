@@ -1,13 +1,15 @@
 package codeu.model.store.persistence;
 
-import codeu.model.data.Conversation;
-import codeu.model.data.Message;
-import codeu.model.data.User;
 import java.time.Instant;
 import java.util.UUID;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
+
+import codeu.model.data.Conversation;
+import codeu.model.data.Message;
+import codeu.model.data.User;
 
 /**
  * Contains tests of the PersistentStorageAgent class. Currently that class is just a pass-through
