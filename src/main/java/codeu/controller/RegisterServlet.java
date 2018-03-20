@@ -78,10 +78,7 @@ void setUserStore(UserStore userStore) {
    
 
    //if not, creates the user 
-   User user = new User(UUID.randomUUID(), username, password, Instant.now());
-   userStore.addUser(user);
-   //forwards to login page
-
+   //forwards to login page 
   User user = new User(UUID.randomUUID(), username, passwordHash, Instant.now());
   userStore.addUser(user);
 
