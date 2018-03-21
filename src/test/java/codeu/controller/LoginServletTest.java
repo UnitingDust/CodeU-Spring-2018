@@ -34,7 +34,7 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 
 import java.time.Instant;
-
+import org.mindrot.jbcrypt.BCrypt;
 public class LoginServletTest {
    
   private LoginServlet loginServlet;
@@ -84,7 +84,8 @@ public class LoginServletTest {
 
     UserStore mockUserStore = Mockito.mock(UserStore.class);
     Mockito.when(mockUserStore.isUserRegistered("test username")).thenReturn(true);
-    Mockito.when(mockUserStore.getUser("test username")).thenReturn(new User(UUID.randomUUID(), "test username", "incorrect password", Instant.now()));
+    String passwordHash = BCrypt.hashpw("incorrect password", BCrypt.gensalt());
+    Mockito.when(mockUserStore.getUser("test username")).thenReturn(new User(UUID.randomUUID(), "test username", passwordHash, Instant.now()));
     loginServlet.setUserStore(mockUserStore);
 
     HttpSession mockSession = Mockito.mock(HttpSession.class);
@@ -105,7 +106,8 @@ public class LoginServletTest {
    
     UserStore mockUserStore = Mockito.mock(UserStore.class);
     Mockito.when(mockUserStore.isUserRegistered("test username")).thenReturn(true);
-    Mockito.when(mockUserStore.getUser("test username")).thenReturn(new User(UUID.randomUUID(), "test username", "test password", Instant.now()));
+    String passwordHash = BCrypt.hashpw("test password", BCrypt.gensalt());
+    Mockito.when(mockUserStore.getUser("test username")).thenReturn(new User(UUID.randomUUID(), "test username", passwordHash, Instant.now()));
     loginServlet.setUserStore(mockUserStore);
 
     HttpSession mockSession = Mockito.mock(HttpSession.class);

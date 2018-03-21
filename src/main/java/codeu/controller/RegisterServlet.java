@@ -12,6 +12,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.mindrot.jbcrypt.BCrypt;
 
 /**
 * Servlet class responsible for user registration.
@@ -59,6 +60,7 @@ void setUserStore(UserStore userStore) {
     //stores the user name and passwords as strings
    String username = request.getParameter("username");
    String password = request.getParameter("password");
+   String passwordHash = BCrypt.hashpw(password, BCrypt.gensalt());
 
    //if the user name is contains symbols, it should be an error
    if (!username.matches("[\\w*\\s*]*")) {
@@ -76,9 +78,11 @@ void setUserStore(UserStore userStore) {
    
 
    //if not, creates the user 
-   User user = new User(UUID.randomUUID(), username, password, Instant.now());
-   userStore.addUser(user);
-   //forwards to login page
+   //forwards to login page 
+  User user = new User(UUID.randomUUID(), username, passwordHash, Instant.now());
+  userStore.addUser(user);
+
+
    response.sendRedirect("/login");
  
 
