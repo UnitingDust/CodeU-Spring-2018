@@ -86,11 +86,9 @@ public class LoginServletTest {
     UserStore mockUserStore = Mockito.mock(UserStore.class);
     Mockito.when(mockUserStore.isUserRegistered("test username")).thenReturn(true);
     String passwordHash = BCrypt.hashpw("incorrect password", BCrypt.gensalt());
-<<<<<<< HEAD
-     Mockito.when(mockUserStore.getUser("test username")).thenReturn(new User(UUID.randomUUID(), "test username", passwordHash, Instant.now()));
-=======
+
     Mockito.when(mockUserStore.getUser("test username")).thenReturn(new User(UUID.randomUUID(), "test username", passwordHash, Instant.now()));
->>>>>>> 1135680e4895773bdd89af82ae72b8bc268559fd
+
     loginServlet.setUserStore(mockUserStore);
 
     HttpSession mockSession = Mockito.mock(HttpSession.class);
