@@ -106,5 +106,5 @@ public class RegisterServletTest {
 
     Mockito.verify(mockResponse).sendRedirect("/login");
  }
-
 }
+
