@@ -28,7 +28,7 @@ import java.util.UUID;
  */
 public class ProfileStore {
 
-  /** Singleton instance of UserStore. */
+  /** Singleton instance of ProfileStore. */
   private static ProfileStore instance;
 
   /**
@@ -67,7 +67,7 @@ public class ProfileStore {
 
   /** Load a set of randomly-generated Message objects. */
   public void loadTestData() {
-    users.addAll(DefaultDataStore.getInstance().getAllProfiles());
+    profiles.addAll(DefaultDataStore.getInstance().getAllProfiles());
   }
 
   /**
@@ -75,7 +75,7 @@ public class ProfileStore {
    *
    * @return null if author does not match any existing User.
    */
-  public Profile getProfile(String author) {
+  public Profile getProfile(UUID author) {
     // This approach will be pretty slow if we have many authors.
     for (Profile profile : profiles) {
       if (profile.getAuthor().equals(author)) {
@@ -106,7 +106,7 @@ public class ProfileStore {
   }
 
   /** Return true if the given profile is known to the application. */
-  public boolean isUserRegistered(String author) {
+  public boolean isUserRegistered(UUID author) {
     for (Profile profile : profiles) {
       if (profile.getAuthor().equals(author)) {
         return true;
@@ -119,7 +119,7 @@ public class ProfileStore {
    * Sets the List of Profiles stored by this ProfileStore. This should only be called once, when the data
    * is loaded from Datastore.
    */
-  public void setAuthors(List<Authors> authors) {
+  public void setProfiles(List<Profiles> authors) {
     this.author = author;
   }
 }
