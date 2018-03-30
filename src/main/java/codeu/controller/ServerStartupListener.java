@@ -9,7 +9,7 @@ import codeu.model.data.Profile;
 import codeu.model.store.basic.ConversationStore;
 import codeu.model.store.basic.MessageStore;
 import codeu.model.store.basic.UserStore;
-import codeu.model.store.basic.ProfleStore;
+import codeu.model.store.basic.ProfileStore;
 import codeu.model.store.persistence.PersistentDataStoreException;
 import codeu.model.store.persistence.PersistentStorageAgent;
 import java.util.List;
@@ -37,7 +37,6 @@ public class ServerStartupListener implements ServletContextListener {
 
       List<Profile> profiles = PersistentStorageAgent.getInstance().loadProfiles();
       ProfileStore.getInstance().setProfiles(profiles);
-
     } catch (PersistentDataStoreException e) {
       System.err.println("Server didn't start correctly. An error occurred during Datastore load!");
       System.err.println("This is usually caused by loading data that's in an invalid format.");

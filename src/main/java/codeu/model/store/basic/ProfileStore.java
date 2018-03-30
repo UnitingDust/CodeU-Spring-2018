@@ -75,7 +75,7 @@ public class ProfileStore {
    *
    * @return null if author does not match any existing User.
    */
-  public Profile getProfile(UUID author) {
+  public Profile getProfileAuthor(UUID author) {
     // This approach will be pretty slow if we have many authors.
     for (Profile profile : profiles) {
       if (profile.getAuthor().equals(author)) {
@@ -119,7 +119,7 @@ public class ProfileStore {
    * Sets the List of Profiles stored by this ProfileStore. This should only be called once, when the data
    * is loaded from Datastore.
    */
-  public void setProfiles(List<Profiles> authors) {
-    this.author = author;
+  public void setProfiles(List<Profile> profiles) {
+    this.profiles = profiles;
   }
 }
