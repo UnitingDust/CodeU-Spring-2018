@@ -163,10 +163,10 @@ public class PersistentDataStore {
 	  
 	  for (Entity entity : results.asIterable()) {
 		  try {
-			  UUID author = UUID.fromString((String) entity.getProperty("author_uuid"));
+			  UUID user = UUID.fromString((String) entity.getProperty("user_uuid"));
 			  String description = (String)entity.getProperty("description");
 			  
-			  Profile profile = new Profile(author, description);
+			  Profile profile = new Profile(user, description);
 			  profiles.add(profile);
 		  }
 		  
@@ -216,8 +216,8 @@ public class PersistentDataStore {
   public void writeThrough(Profile profile) {
     Entity conversationEntity = new Entity("chat-profiles");
     
-    conversationEntity.setProperty("author_uuid", profile.getAuthor().toString());
-    conversationEntity.setProperty("owner_uuid", profile.getDescription());
+    conversationEntity.setProperty("user_uuid", profile.getUserID().toString());
+    conversationEntity.setProperty("description", profile.getDescription());
     
     datastore.put(conversationEntity);
   }

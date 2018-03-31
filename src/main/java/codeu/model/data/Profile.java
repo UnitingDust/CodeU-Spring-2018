@@ -4,7 +4,7 @@ import java.util.UUID;
 
 /** Class representing a user's profile */
 public class Profile {
-	private final UUID author;
+	private final UUID user;
 	private String description;
 	
 	/**
@@ -13,16 +13,16 @@ public class Profile {
 	 * @param author ID of the user's profile
 	 * @param description Description of user
 	 */
-	public Profile(UUID author, String description)
+	public Profile(UUID user, String description)
 	{
-		this.author = author;
+		this.user = user;
 		this.description = description;
 	}
 	
-	/** Return the ID of the author of the profile */
-	public UUID getAuthor()
+	/** Return the ID of the user of the profile */
+	public UUID getUserID()
 	{
-		return this.author;
+		return this.user;
 	}
 	
 	/** Return the profile description */
