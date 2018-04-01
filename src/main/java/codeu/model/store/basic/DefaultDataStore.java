@@ -16,6 +16,7 @@ package codeu.model.store.basic;
 
 import codeu.model.data.Conversation;
 import codeu.model.data.Message;
+import codeu.model.data.Profile;
 import codeu.model.data.User;
 import codeu.model.store.persistence.PersistentStorageAgent;
 import java.time.Instant;
@@ -63,12 +64,14 @@ public class DefaultDataStore {
   private List<User> users;
   private List<Conversation> conversations;
   private List<Message> messages;
+  private List<Profile> profiles;
 
   /** This class is a singleton, so its constructor is private. Call getInstance() instead. */
   private DefaultDataStore() {
     users = new ArrayList<>();
     conversations = new ArrayList<>();
     messages = new ArrayList<>();
+    profiles = new ArrayList<>();
 
     if (USE_DEFAULT_DATA) {
       addRandomUsers();
@@ -92,16 +95,28 @@ public class DefaultDataStore {
   public List<Message> getAllMessages() {
     return messages;
   }
+  
+  public List<Profile> getAllProfiles() {
+	  return profiles;
+  }
 
   private void addRandomUsers() {
 
     List<String> randomUsernames = getRandomUsernames();
     Collections.shuffle(randomUsernames);
+    
+    char letter = 'a';
 
     for (int i = 0; i < DEFAULT_USER_COUNT; i++) {
       User user = new User(UUID.randomUUID(),randomUsernames.get(i), BCrypt.hashpw("password", BCrypt.gensalt()), Instant.now());
       PersistentStorageAgent.getInstance().writeThrough(user);
       users.add(user);
+      
+      Profile profile = new Profile(user.getId(), Character.toString(letter));
+      PersistentStorageAgent.getInstance().writeThrough(profile);
+      profiles.add(profile);
+      
+      letter++;
     }
   }
 
