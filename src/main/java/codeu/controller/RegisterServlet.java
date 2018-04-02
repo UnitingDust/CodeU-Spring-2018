@@ -1,5 +1,6 @@
 package codeu.controller;
 
+import codeu.model.store.basic.ProfileStore;
 import codeu.model.store.basic.UserStore;
 import codeu.model.data.Profile;
 import codeu.model.data.User;
