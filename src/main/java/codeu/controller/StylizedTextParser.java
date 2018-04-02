@@ -26,12 +26,8 @@ public class StylizedTextParser {
 
     /* converts markdown to HTML elements */
     public String parse(String markdownMessage) {
-
         /* holds final HTML message */
         StringBuffer HTMLMessage = new StringBuffer(); 
-
-        /* message length */
-        int stringLength = markdownMessage.length(); 
 
         /* contains potential stylized text */
         StringBuffer messageBuffer = new StringBuffer(); 
@@ -39,7 +35,7 @@ public class StylizedTextParser {
         /* marks potential beginning of stylized text */
         Stack<Character> styleMarker = new Stack<Character>(); 
 
-        for (int i = 0; i < stringLength; i++) {
+        for (int i = 0; i < markdownMessage.length(); i++) {
             char currChar = markdownMessage.charAt(i); 
             if (MarkdownHTMLMapping.containsKey(currChar)) {
  
