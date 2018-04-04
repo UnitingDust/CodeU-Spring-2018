@@ -9,6 +9,7 @@ import org.mockito.Mockito;
 
 import codeu.model.data.Conversation;
 import codeu.model.data.Message;
+import codeu.model.data.Profile;
 import codeu.model.data.User;
 
 /**
@@ -45,6 +46,12 @@ public class PersistentStorageAgentTest {
     persistentStorageAgent.loadMessages();
     Mockito.verify(mockPersistentDataStore).loadMessages();
   }
+  
+  @Test
+  public void testLoadProfiles() throws PersistentDataStoreException {
+    persistentStorageAgent.loadProfiles();
+    Mockito.verify(mockPersistentDataStore).loadProfiles();
+  }
 
   @Test
   public void testWriteThroughUser() {
@@ -68,5 +75,14 @@ public class PersistentStorageAgentTest {
             UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID(), "test content", Instant.now());
     persistentStorageAgent.writeThrough(message);
     Mockito.verify(mockPersistentDataStore).writeThrough(message);
+  }
+  
+  @Test
+  public void testWriteThroughProfile() {
+    Profile profile =
+        new Profile(
+            UUID.randomUUID(), "test content");
+    persistentStorageAgent.writeThrough(profile);
+    Mockito.verify(mockPersistentDataStore).writeThrough(profile);
   }
 }

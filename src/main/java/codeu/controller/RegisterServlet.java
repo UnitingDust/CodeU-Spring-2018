@@ -39,7 +39,6 @@ public class RegisterServlet extends HttpServlet {
    super.init();
    setUserStore(UserStore.getInstance());
    setProfileStore(ProfileStore.getInstance());
-   
  }
  
  /**
