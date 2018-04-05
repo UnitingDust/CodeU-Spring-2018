@@ -1,8 +1,8 @@
 package codeu.controller;
 
-
-//import the userstore class
+import codeu.model.store.basic.ProfileStore;
 import codeu.model.store.basic.UserStore;
+import codeu.model.data.Profile;
 import codeu.model.data.User;
 import java.util.UUID;
 import java.time.Instant;
@@ -23,6 +23,11 @@ public class RegisterServlet extends HttpServlet {
   * Store class that gives access to Users.
   */
  private UserStore userStore;
+ 
+ /**
+  * Store class that gives access to Profiles
+  */
+ private ProfileStore profileStore;
 
 
  /**
@@ -33,6 +38,8 @@ public class RegisterServlet extends HttpServlet {
  public void init() throws ServletException {
    super.init();
    setUserStore(UserStore.getInstance());
+   setProfileStore(ProfileStore.getInstance());
+   
  }
  
  /**
@@ -43,6 +50,13 @@ void setUserStore(UserStore userStore) {
    this.userStore = userStore;
  }
 
+/**
+ * Sets the ProfileStore used by this servlet. This function provides a common setup method
+ * for use by the test framework or the servlet's init() function.
+ */
+void setProfileStore(ProfileStore profileStore) {
+	this.profileStore = profileStore;
+}
  /*
  This function forwards user request to the register page
  */
@@ -77,15 +91,14 @@ void setUserStore(UserStore userStore) {
    }
    
 
-   //if not, creates the user 
+   //if not, creates the user and profile
    //forwards to login page 
-  User user = new User(UUID.randomUUID(), username, passwordHash, Instant.now());
-  userStore.addUser(user);
-
+   User user = new User(UUID.randomUUID(), username, passwordHash, Instant.now());
+   userStore.addUser(user);
+  
+   Profile profile = new Profile(user.getId(), "");
+   profileStore.addProfile(profile);
 
    response.sendRedirect("/login");
- 
-
  }
-
 }
