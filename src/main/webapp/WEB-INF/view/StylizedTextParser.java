@@ -2,7 +2,7 @@
 // Class with methods to parse a message with markdown elements and
 // convert to HTML stylized text 
 
-//package codeu.controller;
+package codeu.controller;
 
 import java.lang.StringBuffer; 
 import java.lang.String; 
@@ -12,56 +12,58 @@ import java.util.Hashtable;
 public class StylizedTextParser {
 
     /* Maps markdown symbol to array of HTML opening and closing stylized syntax */
-    private Hashtable<Character, String> styleTable; 
+    private static final Hashtable<Character, String> MarkdownHTMLMapping = new Hashtable<Character, String>(); 
 
     /* constructor */
     public StylizedTextParser() {
-        styleTable = new Hashtable<Character, String>(); 
-        fill(styleTable); 
-    }
-
-    /* Fills styleTable with markdown elements to be parsed */
-    private static void fill(Hashtable<Character, String> styleTable) {
-        styleTable.put('*', "b");
-        styleTable.put('_', "i");  
+        MarkdownHTMLMapping.put('*', "b");
+        MarkdownHTMLMapping.put('_', "i"); 
     }
 
     /* converts markdown to HTML elements */
     public String parse(String markdownMessage) {
 
-        StringBuffer HTMLMessage = new StringBuffer(); /* holds final HTML message */
-        int stringLength = markdownMessage.length(); /* message length */
-        StringBuffer messageBuffer = new StringBuffer(); /* contains potential stylized text */
-        Stack<Character> styleMarker = new Stack<Character>(); /* marks potential beginning of stylized text */
+        /* holds final HTML message */
+        StringBuffer HTMLMessage = new StringBuffer(); 
+
+        /* message length */
+        int stringLength = markdownMessage.length(); 
+
+        /* contains potential stylized text */
+        StringBuffer messageBuffer = new StringBuffer(); 
+
+        /* marks potential beginning of stylized text */
+        Stack<Character> styleMarker = new Stack<Character>(); 
 
         for (int i = 0; i < stringLength; i++) {
             char currChar = markdownMessage.charAt(i); 
-            if (styleTable.containsKey(currChar)) {
+            if (MarkdownHTMLMapping.containsKey(currChar)) {
  
                 /* found possible beginning of stylized text */
                 if (styleMarker.isEmpty() || styleMarker.peek() != currChar) { 
                     styleMarker.push(currChar);
                 }
                 else { /* found end of stylized text */
-                    String HTMLTag = styleTable.get(styleMarker.pop()); 
-                    HTMLMessage.append("<" + HTMLTag + ">"); 
-                    HTMLMessage.append(messageBuffer); 
-                    HTMLMessage.append("</" + HTMLTag + ">"); 
+                    String HTMLTag = MarkdownHTMLMapping.get(styleMarker.pop()); 
+                    HTMLMessage.append("<" + HTMLTag + ">" + messageBuffer + "</" + HTMLTag + ">"); 
                     messageBuffer = new StringBuffer(); // TODO change to handle different embedded markdown elements 
                 }
             }
             else {
 
                 /* if in potential stylized text, add to buffer; otherwise add to final message */
-                if (styleMarker.isEmpty()) 
+                if (styleMarker.isEmpty()) {
                     HTMLMessage.append(currChar); 
-                else 
+                }
+                else {
                     messageBuffer.append(currChar); 
+                }
             }
         }
 
-        if (messageBuffer.capacity() != 0) 
-            HTMLMessage.append(messageBuffer); 
+        if (messageBuffer.capacity() != 0) {
+            HTMLMessage.append(messageBuffer);
+        } 
 
         return HTMLMessage.toString(); 
     }
