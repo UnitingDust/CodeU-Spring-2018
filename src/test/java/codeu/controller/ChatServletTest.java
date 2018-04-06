@@ -35,7 +35,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
-
+import codeu.controller.StylizedTextParser;
 public class ChatServletTest {
 
   private ChatServlet chatServlet;
@@ -69,6 +69,7 @@ public class ChatServletTest {
     mockUserStore = Mockito.mock(UserStore.class);
     chatServlet.setUserStore(mockUserStore);
   }
+  
 
   @Test
   public void testDoGet() throws IOException, ServletException {
@@ -175,7 +176,7 @@ public class ChatServletTest {
   public void testDoPost_CleansHtmlContent() throws IOException, ServletException {
     Mockito.when(mockRequest.getRequestURI()).thenReturn("/chat/test_conversation");
     Mockito.when(mockSession.getAttribute("user")).thenReturn("test_username");
-
+    //creates fake user
     User fakeUser = new User(UUID.randomUUID(), "test_username", "test_password", Instant.now());
     Mockito.when(mockUserStore.getUser("test_username")).thenReturn(fakeUser);
 
@@ -191,9 +192,26 @@ public class ChatServletTest {
 
     ArgumentCaptor<Message> messageArgumentCaptor = ArgumentCaptor.forClass(Message.class);
     Mockito.verify(mockMessageStore).addMessage(messageArgumentCaptor.capture());
+    //The html tags should remain in the message
     Assert.assertEquals(
-        "Contains html and  content.", messageArgumentCaptor.getValue().getContent());
+        "Contains <b>html</b> and <script>JavaScript</script> content.", messageArgumentCaptor.getValue().getContent());
 
     Mockito.verify(mockResponse).sendRedirect("/chat/test_conversation");
   }
+
+  @Test
+  public void testStylizedTestParser(){
+    StylizedTextParser testParser = new StylizedTextParser(); 
+
+        //Tests if markup tags are being parsed to html
+        Assert.assertEquals("testing BOLD: <b>bold this</b>",testParser.parse("testing BOLD: *bold this*"));
+        Assert.assertEquals("do not bold",testParser.parse("*do not bold"));
+        Assert.assertEquals("do not bold",testParser.parse("do not bold*"));
+        Assert.assertEquals("testing ITALICS: <i>italicize this</i>",testParser.parse("testing ITALICS: _italicize this_"));
+        //Assert.assertEquals("testing EMBEDDING: <b>bold</b>, <i>italicize</i>, <i>both</i><b></b>",testParser.parse("testing EMBEDDING: *bold*, _italicize_, *_both_*"));
+       
+        
+    }
+  
+  
 }
