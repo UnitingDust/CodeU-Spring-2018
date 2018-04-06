@@ -1,6 +1,6 @@
 package codeu.model.store.basic;
 
-import codeu.model.data.User;
+import codeu.model.data.Profile;
 import codeu.model.store.persistence.PersistentStorageAgent;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -11,83 +11,82 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 
-public class UserStoreTest {
+public class ProfileStoreTest {
 
-  private UserStore userStore;
+  private ProfileStore profileStore;
   private PersistentStorageAgent mockPersistentStorageAgent;
 
-  private final User USER_ONE =
-      new User(UUID.randomUUID(), "test_username_one", "password_one", Instant.ofEpochMilli(1000));
-  private final User USER_TWO =
-      new User(UUID.randomUUID(), "test_username_two", "password_two", Instant.ofEpochMilli(2000));
-  private final User USER_THREE =
-      new User(UUID.randomUUID(), "test_username_three", "password_three", Instant.ofEpochMilli(3000));
+  private final Profile PROFILE_ONE =
+      new Profile(UUID.randomUUID(), "test_profile_one", Instant.ofEpochMilli(1000));
+  private final Profile PROFILE_TWO =
+      new Profile(UUID.randomUUID(), "test_profile_two", Instant.ofEpochMilli(2000));
+  private final Profile PROFILE_THREE =
+      new Profile(UUID.randomUUID(), "test_profile_three", Instant.ofEpochMilli(3000));
 
   @Before
   public void setup() {
     mockPersistentStorageAgent = Mockito.mock(PersistentStorageAgent.class);
-    userStore = UserStore.getTestInstance(mockPersistentStorageAgent);
+    profileStore = ProfileStore.getTestInstance(mockPersistentStorageAgent);
 
-    final List<User> userList = new ArrayList<>();
-    userList.add(USER_ONE);
-    userList.add(USER_TWO);
-    userList.add(USER_THREE);
-    userStore.setUsers(userList);
+    final List<Profile> profileList = new ArrayList<>();
+    profileList.add(PROFILE_ONE);
+    profileList.add(PROFILE_TWO);
+    profileList.add(PROFILE_THREE);
+    profileStore.setProfiles(profileList);
   }
 
   @Test
-  public void testGetUser_byUsername_found() {
-    User resultUser = userStore.getUser(USER_ONE.getName());
+  public void testProfile_byId_found() {
+    User resultProfile = profileStore.getProfile(PROFILE_ONE.getId());
 
-    assertEquals(USER_ONE, resultUser);
+    assertEquals(PROFILE_ONE, resultProfile);
   }
 
   @Test
-  public void testGetUser_byId_found() {
-    User resultUser = userStore.getUser(USER_ONE.getId());
+  public void testProfile_byAuthor_found() {
+    User resultProfile = profileStore.getProfileAuthor(PROFILE_ONE.getAuthor());
 
-    assertEquals(USER_ONE, resultUser);
+    assertEquals(PROFILE_ONE, resultProfile);
   }
 
   @Test
-  public void testGetUser_byUsername_notFound() {
-    User resultUser = userStore.getUser("fake username");
+  public void testGetProfile_byAuthor_notFound() {
+    User resultProfile = profileStore.getProfile(UUID.randomUUID());
 
-    Assert.assertNull(resultUser);
+    Assert.assertNull(resultProfile);
   }
 
   @Test
-  public void testGetUser_byId_notFound() {
-    User resultUser = userStore.getUser(UUID.randomUUID());
+  public void testGetProfile_byId_notFound() {
+    User resultProfile = profileStore.getProfile(UUID.randomUUID());
 
-    Assert.assertNull(resultUser);
+    Assert.assertNull(resultProfile);
   }
 
   @Test
-  public void testAddUser() {
-    User inputUser = new User(UUID.randomUUID(), "test_username", "password", Instant.now());
+  public void testAddProfile() {
+    Profile inputProfile = new Profile(UUID.randomUUID(), "description");
 
-    userStore.addUser(inputUser);
-    User resultUser = userStore.getUser("test_username");
+    profileStore.addProfile(inputProfile);
+    Profile resultProfile = profileStore.getProfile("description");
 
-    assertEquals(inputUser, resultUser);
-    Mockito.verify(mockPersistentStorageAgent).writeThrough(inputUser);
+    assertEquals(inputProfile, resultProfile);
+    Mockito.verify(mockPersistentStorageAgent).writeThrough(inputProfile);
   }
 
   @Test
   public void testIsUserRegistered_true() {
-    Assert.assertTrue(userStore.isUserRegistered(USER_ONE.getName()));
+    Assert.assertTrue(profileStore.isUserRegistered(PROFILE_ONE.getAuthor()));
   }
 
   @Test
   public void testIsUserRegistered_false() {
-    Assert.assertFalse(userStore.isUserRegistered("fake username"));
+    Assert.assertFalse(profileStore.isUserRegistered("fake author"));
   }
 
-  private void assertEquals(User expectedUser, User actualUser) {
-    Assert.assertEquals(expectedUser.getId(), actualUser.getId());
-    Assert.assertEquals(expectedUser.getName(), actualUser.getName());
-    Assert.assertEquals(expectedUser.getPassword(), actualUser.getPassword());
-    Assert.assertEquals(expectedUser.getCreationTime(), actualUser.getCreationTime());
+  private void assertEquals(Profile expectedProfile, Profile actualProfile) {
+    Assert.assertEquals(expectedProfile.getUserID(), actualProfile.getUserID());
+    Assert.assertEquals(expectedProfile.getDescription(), actualProfile.getDescription());
+    
   }
 }
