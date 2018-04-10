@@ -10,7 +10,6 @@ import org.junit.Before;
 import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mockito;
-
 import codeu.model.data.Profile;
 import codeu.model.data.User;
 import codeu.model.store.basic.ProfileStore;
@@ -67,7 +66,7 @@ public class RegisterServletTest {
     registerServlet.setUserStore(mockUserStore);
     registerServlet.setProfileStore(mockProfileStore);
     
-    //Return false when running isUserRegistered() method
+    // Return false when running isUserRegistered() method
     Mockito.when(mockUserStore.isUserRegistered("test username")).thenReturn(false);
     
     HttpSession mockSession = Mockito.mock(HttpSession.class);
@@ -75,7 +74,7 @@ public class RegisterServletTest {
 
     registerServlet.doPost(mockRequest, mockResponse);
    
-    //Store the User and Profile object that were created
+    // Store the User and Profile object that were created
     ArgumentCaptor<User> userArgumentCaptor = ArgumentCaptor.forClass(User.class);
     ArgumentCaptor<Profile> profileArgumentCaptor = ArgumentCaptor.forClass(Profile.class);
 
