@@ -159,13 +159,13 @@ public class PersistentDataStoreTest {
 	  String description2 = "test_2";
 	  Profile profile2 = new Profile(idTwo, description2);
 	  
-	  //Save the Profiles
+	  // Save the Profiles
 	  persistentDataStore.writeThrough(profile1);
 	  persistentDataStore.writeThrough(profile2);
 	  
 	  List<Profile> resultProfiles = persistentDataStore.loadProfiles();
 	  
-	  //Confirm the saved profiles were the ones that we initially loaded into the database
+	  // Confirm the saved profiles were the ones that we initially loaded into the database
 	  Profile resultProfileOne = resultProfiles.get(0);
 	  Assert.assertEquals(idOne, resultProfileOne.getUserID());
 	  Assert.assertEquals(description1, resultProfileOne.getDescription());
