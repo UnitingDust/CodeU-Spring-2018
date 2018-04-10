@@ -71,28 +71,13 @@ public class ProfileStore {
   }
 
   /**
-   * Access the Profile object with the given name.
-   *
-   * @return null if author does not match any existing User.
-   */
-  public Profile getProfileAuthor(UUID author) {
-    // This approach will be pretty slow if we have many authors.
-    for (Profile profile : profiles) {
-      if (profile.getAuthor().equals(author)) {
-        return profile;
-      }
-    }
-    return null;
-  }
-
-  /**
    * Access the Profile object with the given UUID.
    *
    * @return null if the UUID does not match any existing Profile.
    */
-  public Profile getProfile(UUID id) {
+  public Profile getProfile(UUID ID) {
     for (Profile profile : profiles) {
-      if (profile.getId().equals(id)) {
+      if (profile.getUserID().toString().equals(ID.toString())) {
         return profile;
       }
     }
@@ -106,9 +91,9 @@ public class ProfileStore {
   }
 
   /** Return true if the given profile is known to the application. */
-  public boolean isUserRegistered(UUID author) {
+  public boolean isUserRegistered(UUID ID) {
     for (Profile profile : profiles) {
-      if (profile.getAuthor().equals(author)) {
+      if (profile.getUserID().toString().equals(ID.toString())) {
         return true;
       }
     }
