@@ -13,11 +13,11 @@ public class ProfileTest {
 		UUID userID = UUID.randomUUID();
 		Profile profile = new Profile(userID, description);
 
-	    Assert.assertEquals(userID, profile.getUserID());
-	    Assert.assertEquals(description, profile.getDescription());
+		Assert.assertEquals(userID, profile.getUserID());
+	    	Assert.assertEquals(description, profile.getDescription());
 	    
-	    profile.setDescription(description2);
-	    Assert.assertEquals(description2, profile.getDescription());
+	    	profile.setDescription(description2);
+	    	Assert.assertEquals(description2, profile.getDescription());
 	  }
 
 }
