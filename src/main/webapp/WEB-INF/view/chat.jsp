@@ -70,12 +70,12 @@ List<Message> messages = (List<Message>) request.getAttribute("messages");
 
 
  <h2><strong> Add Some Jazz to Your Gossip</strong></h2>
-      <p>  
+      <ul>  
        <li><i>Italics: </i>  _italics_</li> 
         <li><b>Bold: </b> *Bold*</li> 
          <li><i><b>Bold-Italics: </b><i/> *_bold-italics_* </li> 
 
-       </p>
+       </ul>
 
     <div id="chat">
       <ul>
