@@ -63,12 +63,14 @@ public class ProfileStoreTest {
     Assert.assertNull(resultProfile);
   }
 
+  UUID id = UUID.randomUUID();
+
   @Test
   public void testAddProfile() {
-    Profile inputProfile = new Profile(UUID.randomUUID(), "description");
+    Profile inputProfile = new Profile(id, "description");
 
     profileStore.addProfile(inputProfile);
-    Profile resultProfile = profileStore.getProfile("description");
+    Profile resultProfile = profileStore.getProfile(id, "description");
 
     assertEquals(inputProfile, resultProfile);
     Mockito.verify(mockPersistentStorageAgent).writeThrough(inputProfile);
