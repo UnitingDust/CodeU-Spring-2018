@@ -16,6 +16,7 @@ import codeu.model.store.basic.ProfileStore;
 import codeu.model.store.basic.UserStore;
 import org.mockito.ArgumentCaptor;
 
+
 public class RegisterServletTest {
 
  private RegisterServlet registerServlet;
@@ -119,4 +120,3 @@ public class RegisterServletTest {
     Mockito.verify(mockResponse).sendRedirect("/login");
  }
 }
-

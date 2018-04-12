@@ -93,7 +93,7 @@ public class ProfileStore {
   /** Return true if the given profile is known to the application. */
   public boolean isUserRegistered(UUID ID) {
     for (Profile profile : profiles) {
-    	if (profile.getUserID().toString().equals(ID.toString())) {
+      if (profile.getUserID().toString().equals(ID.toString())) {
         return true;
       }
     }
