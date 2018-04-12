@@ -141,10 +141,9 @@ public class ChatServlet extends HttpServlet {
     }
 
     String messageContent = request.getParameter("message");
-
-    //message content is now the markup converted to htlm     
+    String cleanedMessageContent = Jsoup.clean(messageContent, Whitelist.basic());   
     StylizedTextParser messageParser = new StylizedTextParser(); 
-    String parsedContent = messageParser.parse(messageContent);
+    String parsedContent = messageParser.parse(cleanedMessageContent);
     
     //creates the new message
     Message message =
