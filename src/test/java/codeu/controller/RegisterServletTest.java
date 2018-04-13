@@ -10,7 +10,9 @@ import org.junit.Before;
 import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mockito;
+import codeu.model.data.Profile;
 import codeu.model.data.User;
+import codeu.model.store.basic.ProfileStore;
 import codeu.model.store.basic.UserStore;
 import org.mockito.ArgumentCaptor;
 
@@ -56,26 +58,36 @@ public class RegisterServletTest {
  @Test 
  public void testDoPost_NewUserRegistration() throws IOException, ServletException{
      
-     Mockito.when(mockRequest.getParameter("username")).thenReturn("test username");
+    Mockito.when(mockRequest.getParameter("username")).thenReturn("test username");
 
+     
     UserStore mockUserStore = Mockito.mock(UserStore.class);
-    //returns false if is a new user
-    Mockito.when(mockUserStore.isUserRegistered("test username")).thenReturn(false);
-    //if the user is not already registered, set up the user accoount
+    ProfileStore mockProfileStore = Mockito.mock(ProfileStore.class);
+    
     registerServlet.setUserStore(mockUserStore);
-
+    registerServlet.setProfileStore(mockProfileStore);
+    
+    // Return false when running isUserRegistered() method
+    Mockito.when(mockUserStore.isUserRegistered("test username")).thenReturn(false);
+    
     HttpSession mockSession = Mockito.mock(HttpSession.class);
     Mockito.when(mockRequest.getSession()).thenReturn(mockSession);
 
     registerServlet.doPost(mockRequest, mockResponse);
    
-   //stores the user objects created
+    // Store the User and Profile object that were created
     ArgumentCaptor<User> userArgumentCaptor = ArgumentCaptor.forClass(User.class);
+    ArgumentCaptor<Profile> profileArgumentCaptor = ArgumentCaptor.forClass(Profile.class);
 
     //verifies that the user added is "test username"
     Mockito.verify(mockUserStore).addUser(userArgumentCaptor.capture());
     Assert.assertEquals(userArgumentCaptor.getValue().getName(), "test username");
 
+    //Verify that the profile added to ProfileStore contains correct ID and description
+    Mockito.verify(mockProfileStore).addProfile(profileArgumentCaptor.capture());
+    Assert.assertEquals(profileArgumentCaptor.getValue().getUserID(), userArgumentCaptor.getValue().getId());
+    Assert.assertEquals(profileArgumentCaptor.getValue().getDescription(), "");
+    
     mockSession.setAttribute("user", "test username");
 
     Mockito.verify(mockSession).setAttribute("user", "test username");
