@@ -2,14 +2,13 @@ package codeu.model.store.basic;
 
 import codeu.model.data.Profile;
 import codeu.model.store.persistence.PersistentStorageAgent;
-import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Mockito;
+import org.mockito.Mockito; 
 
 public class ProfileStoreTest {
 
@@ -17,11 +16,11 @@ public class ProfileStoreTest {
   private PersistentStorageAgent mockPersistentStorageAgent;
 
   private final Profile PROFILE_ONE =
-      new Profile(UUID.randomUUID(), "test_profile_one", Instant.ofEpochMilli(1000));
+      new Profile(UUID.randomUUID(), "test_profile_one");
   private final Profile PROFILE_TWO =
-      new Profile(UUID.randomUUID(), "test_profile_two", Instant.ofEpochMilli(2000));
+      new Profile(UUID.randomUUID(), "test_profile_two");
   private final Profile PROFILE_THREE =
-      new Profile(UUID.randomUUID(), "test_profile_three", Instant.ofEpochMilli(3000));
+      new Profile(UUID.randomUUID(), "test_profile_three");
 
   @Before
   public void setup() {
@@ -36,39 +35,21 @@ public class ProfileStoreTest {
   }
 
   @Test
-  public void testProfile_byId_found() {
-    User resultProfile = profileStore.getProfile(PROFILE_ONE.getId());
-
+  public void testgetProfile() {
+    Profile resultProfile = profileStore.getProfile(PROFILE_ONE.getUserID());
+    Profile nullProfile = profileStore.getProfile(UUID.randomUUID());
+    
     assertEquals(PROFILE_ONE, resultProfile);
-  }
-
-  @Test
-  public void testProfile_byAuthor_found() {
-    User resultProfile = profileStore.getProfileAuthor(PROFILE_ONE.getAuthor());
-
-    assertEquals(PROFILE_ONE, resultProfile);
-  }
-
-  @Test
-  public void testGetProfile_byAuthor_notFound() {
-    User resultProfile = profileStore.getProfile(UUID.randomUUID());
-
-    Assert.assertNull(resultProfile);
-  }
-
-  @Test
-  public void testGetProfile_byId_notFound() {
-    User resultProfile = profileStore.getProfile(UUID.randomUUID());
-
-    Assert.assertNull(resultProfile);
+    Assert.assertEquals(null, nullProfile);  
   }
 
   @Test
   public void testAddProfile() {
-    Profile inputProfile = new Profile(UUID.randomUUID(), "description");
+	UUID id = UUID.randomUUID();
+    Profile inputProfile = new Profile(id, "test_description");
 
     profileStore.addProfile(inputProfile);
-    Profile resultProfile = profileStore.getProfile("description");
+    Profile resultProfile = profileStore.getProfile(id);
 
     assertEquals(inputProfile, resultProfile);
     Mockito.verify(mockPersistentStorageAgent).writeThrough(inputProfile);
@@ -76,12 +57,12 @@ public class ProfileStoreTest {
 
   @Test
   public void testIsUserRegistered_true() {
-    Assert.assertTrue(profileStore.isUserRegistered(PROFILE_ONE.getAuthor()));
+    Assert.assertTrue(profileStore.isUserRegistered(PROFILE_ONE.getUserID()));
   }
 
   @Test
   public void testIsUserRegistered_false() {
-    Assert.assertFalse(profileStore.isUserRegistered("fake author"));
+    Assert.assertFalse(profileStore.isUserRegistered(UUID.randomUUID()));
   }
 
   private void assertEquals(Profile expectedProfile, Profile actualProfile) {
