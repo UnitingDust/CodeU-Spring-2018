@@ -1,4 +1,4 @@
-package codeu.model.store.basic;
+package codeu.model.store.basic; 
 
 import codeu.model.data.Profile;
 import codeu.model.store.persistence.PersistentStorageAgent;
