@@ -30,6 +30,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.jsoup.Jsoup;
 import org.jsoup.safety.Whitelist;
+import  codeu.controller.StylizedTextParser;
+
 
 /** Servlet class responsible for the chat page. */
 public class ChatServlet extends HttpServlet {
@@ -110,7 +112,7 @@ public class ChatServlet extends HttpServlet {
    * submitted form data. It creates a new Message from that data, adds it to the model, and then
    * redirects back to the chat page.
    */
-  @Override
+   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response)
       throws IOException, ServletException {
 
@@ -139,16 +141,17 @@ public class ChatServlet extends HttpServlet {
     }
 
     String messageContent = request.getParameter("message");
-
-    // this removes any HTML from the message content
-    String cleanedMessageContent = Jsoup.clean(messageContent, Whitelist.none());
-
+    String cleanedMessageContent = Jsoup.clean(messageContent, Whitelist.basic());   
+    StylizedTextParser messageParser = new StylizedTextParser(); 
+    String parsedContent = messageParser.parse(cleanedMessageContent);
+    
+    //creates the new message
     Message message =
         new Message(
             UUID.randomUUID(),
             conversation.getId(),
             user.getId(),
-            cleanedMessageContent,
+            parsedContent,
             Instant.now());
 
     messageStore.addMessage(message);
