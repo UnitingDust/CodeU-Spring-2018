@@ -15,6 +15,7 @@
 package codeu.model.store.basic;
 
 import codeu.model.data.Message;
+import codeu.model.data.Profile;
 import codeu.model.store.persistence.PersistentStorageAgent;
 import java.util.ArrayList;
 import java.util.List;
@@ -106,4 +107,33 @@ public class MessageStore {
   public void setMessages(List<Message> messages) {
     this.messages = messages;
   }
+
+  /** Access all the messages from certain profile 
+  public List<Messages> getAllMessages(UUID ID) {
+    for (Profile profile : profiles) {
+      if (profile.getUserID().toString().equals(ID.toString())) {
+        return messages;
+      }
+  }
+
+  */
+
+public List<Message> getAllMessages(UUID userID) {
+
+    List<Message> messagesByUser = new ArrayList<>();
+
+    for (Message message : messages) {
+      if (message.getAuthorId().equals(userID)) {
+        messagesByUser.add(message);
+      }
+    }
+
+    return messagesByUser;
+  }
+  /*
+ Gets list of messages stored by one specific user 
+  public void getMessages(List<Message> messages){
+    for 
+  }
+  */
 }
