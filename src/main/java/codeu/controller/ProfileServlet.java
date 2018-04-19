@@ -84,7 +84,12 @@ public class ProfileServlet extends HttpServlet {
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response)
       throws IOException, ServletException {
-    Profile profile = profileStore.getProfile();
+    //Profile profile = profileStore.getProfile();
+    String requestUrl = request.getRequestURI();
+    String username = requestUrl.substring("/profile/".length());
+    User user = userStore.getUser(username);
+    id = username.getID();
+    Profile profile = profileStore.getProfile(id);
     List<Message> messages = messageStore.getAllMessages();
     request.setAttribute("profile", profile);
     request.setAttribute("messages", setMessages(messages));
@@ -103,11 +108,10 @@ public class ProfileServlet extends HttpServlet {
 
     String description = request.getParameter("description");
 
-    Profile description =
-        new Profile(UUID.randomUUID(), profile.getUserID(), description, Instant.now());
+    profile.updateProfile(description, profile);
 
     profileStore.setProfiles();
-    response.sendRedirect("/profile/" + description);
+    response.sendRedirect("/profile/");
   }
 }
 

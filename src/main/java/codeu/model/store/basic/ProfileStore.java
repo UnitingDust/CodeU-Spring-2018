@@ -111,5 +111,6 @@ public class ProfileStore {
   public void updateProfileStore(String newDescription, Profile profile){
       profile.setDescription(newDescription);
       
+      
 }
 }
