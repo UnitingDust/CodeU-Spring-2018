@@ -15,11 +15,12 @@
 package codeu.model.store.basic;
 
 import codeu.model.data.Profile;
-import codeu.model.data.User;
 import codeu.model.store.persistence.PersistentStorageAgent;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+
+import com.google.appengine.api.datastore.EntityNotFoundException;
 
 /**
  * Store class that uses in-memory data structures to hold values and automatically loads from and
@@ -106,5 +107,14 @@ public class ProfileStore {
    */
   public void setProfiles(List<Profile> profiles) {
     this.profiles = profiles;
+  }
+  
+  /**
+   * Updates the Profile description locally and on the Google Database
+   */
+  public void updateProfile(Profile profile, String description) throws EntityNotFoundException
+  {
+	 profile.setDescription(description);
+	 persistentStorageAgent.updateProfile(profile, description);
   }
 }

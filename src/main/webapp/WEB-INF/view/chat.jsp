@@ -17,9 +17,11 @@
 <%@ page import="codeu.model.data.Conversation" %>
 <%@ page import="codeu.model.data.Message" %>
 <%@ page import="codeu.model.store.basic.UserStore" %>
+<%@ page import="codeu.controller.StylizedTextParser" %>
 <%
 Conversation conversation = (Conversation) request.getAttribute("conversation");
 List<Message> messages = (List<Message>) request.getAttribute("messages");
+StylizedTextParser messageParser = new StylizedTextParser(); 
 %>
 
 <!DOCTYPE html>
@@ -65,14 +67,27 @@ List<Message> messages = (List<Message>) request.getAttribute("messages");
 
     <hr/>
 
+<h1><strong>Gossip Unloading...</strong></h1>
+<img " src="http://ichef.bbci.co.uk/corporate2/images/width/live/p0/53/d3/p053d3rz.jpg/624" width="750" height="150"> 
+
+
+ <h2><strong> Add Some Jazz to Your Gossip</strong></h2>
+      <ul>  
+       <li><i>Italics: </i>  _italics_</li> 
+        <li><b>Bold: </b> *Bold*</li> 
+         <li><i><b>Bold-Italics: </b><i/> *_bold-italics_* </li> 
+
+       </ul>
+
     <div id="chat">
       <ul>
     <%
       for (Message message : messages) {
         String author = UserStore.getInstance()
           .getUser(message.getAuthorId()).getName();
+          String parsedContent = messageParser.parse(message.getContent());
     %>
-      <li><strong><%= author %>:</strong> <%= message.getContent() %></li>
+      <li><strong><%= author %>:</strong> <%= parsedContent %></li>
     <%
       }
     %>
