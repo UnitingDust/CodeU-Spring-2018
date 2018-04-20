@@ -1,4 +1,5 @@
 <%@ page import="java.util.List" %>
+<%@ page import="java.util.Date" %>
 <%@ page import="codeu.model.data.Message" %>
 <%
 String username = (String) request.getAttribute("username");
@@ -78,7 +79,10 @@ List<Message> messages = (List<Message>) request.getAttribute("messages");
     	<div id="chat">
       		<ul>
     		<% for (Message message : messages) { %>
-     			<li><%= message.getContent() %></li>
+    			<%
+    			Date myDate = Date.from(message.getCreationTime());		
+    			%>
+     			<li><b><%= myDate.toString() %></b> <%= ": " + message.getContent() %></li>
     		<% } %>
       		</ul>
     	</div>
