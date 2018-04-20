@@ -66,6 +66,7 @@ List<Message> messages = (List<Message>) request.getAttribute("messages");
     	
     	
     	<% if(request.getSession().getAttribute("user") != null && request.getSession().getAttribute("user").equals(username)){ %>
+    		<h3>Edit your About Me (Only you can see)</h3>
     		<form action="/profile/<%= username %>" method="POST">
     			<textarea rows="6" cols="90" name="editDescription" placeholder="Limit 250 characters" maxlength="250"></textarea><br>
     						
