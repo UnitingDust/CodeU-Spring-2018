@@ -108,16 +108,6 @@ public class MessageStore {
     this.messages = messages;
   }
 
-  /** Access all the messages from certain profile 
-  public List<Messages> getAllMessages(UUID ID) {
-    for (Profile profile : profiles) {
-      if (profile.getUserID().toString().equals(ID.toString())) {
-        return messages;
-      }
-  }
-
-  */
-
 public List<Message> getAllMessages(UUID userID) {
 
     List<Message> messagesByUser = new ArrayList<>();

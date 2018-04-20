@@ -87,10 +87,9 @@ public class ProfileServlet extends HttpServlet {
     //Profile profile = profileStore.getProfile();
     String requestUrl = request.getRequestURI();
     String username = requestUrl.substring("/profile/".length());
-    User user = userStore.getUser(username);
-    id = username.getID();
+    UUID id = userStore.getUser(username).getId()
     Profile profile = profileStore.getProfile(id);
-    List<Message> messages = messageStore.getAllMessages();
+    List<Message> messages = messageStore.getAllMessages(id);
     request.setAttribute("profile", profile);
     request.setAttribute("messages", setMessages(messages));
     request.getRequestDispatcher("/WEB-INF/view/profile.jsp").forward(request, response);
