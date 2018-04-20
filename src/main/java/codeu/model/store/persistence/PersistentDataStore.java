@@ -24,6 +24,7 @@ import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
+
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
@@ -214,11 +215,10 @@ public class PersistentDataStore {
   
   /** Write a Profile object to the Datastore service. */
   public void writeThrough(Profile profile) {
-    Entity conversationEntity = new Entity("chat-profiles");
+    Entity profileEntity = new Entity("chat-profiles", profile.getUserID().toString());
+    profileEntity.setProperty("user_uuid", profile.getUserID().toString());
+    profileEntity.setProperty("description", profile.getDescription());
     
-    conversationEntity.setProperty("user_uuid", profile.getUserID().toString());
-    conversationEntity.setProperty("description", profile.getDescription());
-    
-    datastore.put(conversationEntity);
+    datastore.put(profileEntity);
   }
 }

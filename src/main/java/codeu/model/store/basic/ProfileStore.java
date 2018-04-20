@@ -15,7 +15,6 @@
 package codeu.model.store.basic;
 
 import codeu.model.data.Profile;
-import codeu.model.data.User;
 import codeu.model.store.persistence.PersistentStorageAgent;
 import java.util.ArrayList;
 import java.util.List;
@@ -106,5 +105,14 @@ public class ProfileStore {
    */
   public void setProfiles(List<Profile> profiles) {
     this.profiles = profiles;
+  }
+  
+  /**
+   * Updates the Profile description locally and on the Google Database
+   */
+  public void updateProfile(Profile profile, String description)
+  {
+	 profile.setDescription(description);
+	 persistentStorageAgent.writeThrough(profile);
   }
 }

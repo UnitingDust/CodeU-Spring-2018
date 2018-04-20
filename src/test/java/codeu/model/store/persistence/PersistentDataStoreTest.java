@@ -154,24 +154,16 @@ public class PersistentDataStoreTest {
 	  UUID idOne = UUID.randomUUID();
 	  String description1 = "test_1";
 	  Profile profile1 = new Profile(idOne, description1);
-	  
-	  UUID idTwo = UUID.randomUUID();
-	  String description2 = "test_2";
-	  Profile profile2 = new Profile(idTwo, description2);
-	  
+	  	  
 	  // Save the Profiles
 	  persistentDataStore.writeThrough(profile1);
-	  persistentDataStore.writeThrough(profile2);
 	  
+	  //Profile resultProfile = persistentDataStore.get
 	  List<Profile> resultProfiles = persistentDataStore.loadProfiles();
 	  
 	  // Confirm the saved profiles were the ones that we initially loaded into the database
 	  Profile resultProfileOne = resultProfiles.get(0);
 	  Assert.assertEquals(idOne, resultProfileOne.getUserID());
 	  Assert.assertEquals(description1, resultProfileOne.getDescription());
-	  
-	  Profile resultProfileTwo = resultProfiles.get(1);
-	  Assert.assertEquals(idTwo, resultProfileTwo.getUserID());
-	  Assert.assertEquals(description2, resultProfileTwo.getDescription());
   }
 }

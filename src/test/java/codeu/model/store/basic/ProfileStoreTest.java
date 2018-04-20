@@ -1,6 +1,7 @@
 package codeu.model.store.basic;
 
 import codeu.model.data.Profile;
+import codeu.model.store.persistence.PersistentDataStoreException;
 import codeu.model.store.persistence.PersistentStorageAgent;
 import java.util.ArrayList;
 import java.util.List;
@@ -65,6 +66,19 @@ public class ProfileStoreTest {
     Assert.assertFalse(profileStore.isUserRegistered(UUID.randomUUID()));
   }
 
+  @Test
+  public void testUpdateProfile() throws PersistentDataStoreException {
+	  UUID id = UUID.randomUUID();
+	  Profile inputProfile = new Profile(id, "test_description");
+
+	  profileStore.addProfile(inputProfile);
+	  Assert.assertEquals(profileStore.getProfile(id).getDescription(), "test_description");
+	  Mockito.verify(mockPersistentStorageAgent).writeThrough(inputProfile);
+	  
+	  profileStore.updateProfile(inputProfile, "different");
+	  Assert.assertEquals(profileStore.getProfile(id).getDescription(), "different");
+	  //Mockito.verify(mockPersistentStorageAgent).writeThrough(inputProfile);
+  }
   private void assertEquals(Profile expectedProfile, Profile actualProfile) {
     Assert.assertEquals(expectedProfile.getUserID(), actualProfile.getUserID());
     Assert.assertEquals(expectedProfile.getDescription(), actualProfile.getDescription());
