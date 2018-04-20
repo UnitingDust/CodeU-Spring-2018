@@ -9,7 +9,9 @@ import java.util.UUID;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Mockito; 
+import org.mockito.Mockito;
+
+import com.google.appengine.api.datastore.EntityNotFoundException; 
 
 public class ProfileStoreTest {
 
@@ -67,7 +69,7 @@ public class ProfileStoreTest {
   }
 
   @Test
-  public void testUpdateProfile() throws PersistentDataStoreException {
+  public void testUpdateProfile() throws PersistentDataStoreException, EntityNotFoundException {
 	  UUID id = UUID.randomUUID();
 	  Profile inputProfile = new Profile(id, "test_description");
 
@@ -77,7 +79,7 @@ public class ProfileStoreTest {
 	  
 	  profileStore.updateProfile(inputProfile, "different");
 	  Assert.assertEquals(profileStore.getProfile(id).getDescription(), "different");
-	  //Mockito.verify(mockPersistentStorageAgent).writeThrough(inputProfile);
+	  Mockito.verify(mockPersistentStorageAgent).updateProfile(inputProfile, "different");
   }
   private void assertEquals(Profile expectedProfile, Profile actualProfile) {
     Assert.assertEquals(expectedProfile.getUserID(), actualProfile.getUserID());

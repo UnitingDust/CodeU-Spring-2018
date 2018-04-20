@@ -24,6 +24,12 @@ List<Message> messages = (List<Message>) request.getAttribute("messages");
     		height:200px;
     		font-size:14pt;
 		}
+		
+		#descriptiondisplay
+		{
+			width: 800px;
+    		word-wrap: break-word;
+		}
 	</style>
 </head>
 
@@ -55,21 +61,13 @@ List<Message> messages = (List<Message>) request.getAttribute("messages");
     	<hr/>
     	
     	<h2>About <%= username %> </h2>
-    	<p><%= description %></p>
+    	<p id="descriptiondisplay"><%= description %></p>
     	
     	
     	<% if(request.getSession().getAttribute("user") != null && request.getSession().getAttribute("user").equals(username)){ %>
     		<form action="/profile/<%= username %>" method="POST">
-    			<textarea rows="4" cols="50" name="editDescription" placeholder="Limit 200 characters" maxlength="200"></textarea><br>
-    			
-    			<%--
-          		<div class="form-group">
-            		  <label class="form-control-label">Edit your about me: (Only you can see this)</label> 
-          		<input id="textbox" type="text" name="editDescription">
-          		
-        		</div>
-				--%>
-				
+    			<textarea rows="6" cols="90" name="editDescription" placeholder="Limit 250 characters" maxlength="250"></textarea><br>
+    						
         		<button type="submit">Submit</button>
       		</form>
     	<% } %>

@@ -21,13 +21,18 @@ import codeu.model.store.basic.ProfileStore;
 import codeu.model.store.basic.MessageStore;
 import codeu.model.store.basic.UserStore;
 import java.io.IOException;
-import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import org.jsoup.Jsoup;
+import org.jsoup.safety.Whitelist;
+
+import com.google.appengine.api.datastore.EntityNotFoundException;
+
 
 /** Servlet class responsible for the profile page. */
 public class ProfileServlet extends HttpServlet {
@@ -92,6 +97,7 @@ public class ProfileServlet extends HttpServlet {
     User user = userStore.getUser(username);
     request.setAttribute("username", username);
     
+    // Check if user exists
     if (user == null)
     {
     	request.setAttribute("error", "Invalid User");
@@ -121,13 +127,28 @@ public class ProfileServlet extends HttpServlet {
 	String requestUrl = request.getRequestURI();
 	String username = requestUrl.substring("/profile/".length());
 	
-	// TODO
-	// Error checking when user isn't logged in anymore
-	
+	// User isn't logged in anymore. Don't let them edit
+	if ((String) request.getSession().getAttribute("user") == null)
+	{
+		response.sendRedirect("/profile/" + username);
+	    return;
+	}
+		
 	UUID ID = userStore.getUser(username).getId();
 	
+	// Retrieve updated description and clean out any HTML tagging
     String description = request.getParameter("editDescription");
-    profileStore.updateProfile(profileStore.getProfile(ID), description);
+    String cleanDescription = Jsoup.clean(description, Whitelist.none());
+    
+    try 
+    {
+    	// Update profile with new description
+		profileStore.updateProfile(profileStore.getProfile(ID), cleanDescription);
+	} 
+    
+    catch (EntityNotFoundException e) {
+		e.printStackTrace();
+	}
 
     response.sendRedirect("/profile/" + username);
   }

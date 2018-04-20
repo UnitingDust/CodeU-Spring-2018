@@ -20,6 +20,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import com.google.appengine.api.datastore.EntityNotFoundException;
+
 /**
  * Store class that uses in-memory data structures to hold values and automatically loads from and
  * saves to PersistentStorageAgent. It's a singleton so all servlet classes can access the same
@@ -110,9 +112,9 @@ public class ProfileStore {
   /**
    * Updates the Profile description locally and on the Google Database
    */
-  public void updateProfile(Profile profile, String description)
+  public void updateProfile(Profile profile, String description) throws EntityNotFoundException
   {
 	 profile.setDescription(description);
-	 persistentStorageAgent.writeThrough(profile);
+	 persistentStorageAgent.updateProfile(profile, description);
   }
 }
