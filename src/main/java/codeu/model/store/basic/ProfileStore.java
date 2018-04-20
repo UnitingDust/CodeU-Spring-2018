@@ -107,4 +107,10 @@ public class ProfileStore {
   public void setProfiles(List<Profile> profiles) {
     this.profiles = profiles;
   }
+
+  public void updateProfileStore(String newDescription, Profile profile){
+      profile.setDescription(newDescription);
+      
+      
+}
 }
