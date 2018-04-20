@@ -15,11 +15,12 @@
 package codeu.model.store.basic;
 
 import codeu.model.data.Profile;
-import codeu.model.data.User;
 import codeu.model.store.persistence.PersistentStorageAgent;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+
+import com.google.appengine.api.datastore.EntityNotFoundException;
 
 /**
  * Store class that uses in-memory data structures to hold values and automatically loads from and
@@ -71,28 +72,13 @@ public class ProfileStore {
   }
 
   /**
-   * Access the Profile object with the given name.
-   *
-   * @return null if author does not match any existing User.
-   */
-  public Profile getProfileAuthor(UUID author) {
-    // This approach will be pretty slow if we have many authors.
-    for (Profile profile : profiles) {
-      if (profile.getAuthor().equals(author)) {
-        return profile;
-      }
-    }
-    return null;
-  }
-
-  /**
    * Access the Profile object with the given UUID.
    *
    * @return null if the UUID does not match any existing Profile.
    */
-  public Profile getProfile(UUID id) {
+  public Profile getProfile(UUID ID) {
     for (Profile profile : profiles) {
-      if (profile.getId().equals(id)) {
+      if (profile.getUserID().toString().equals(ID.toString())) {
         return profile;
       }
     }
@@ -106,9 +92,9 @@ public class ProfileStore {
   }
 
   /** Return true if the given profile is known to the application. */
-  public boolean isUserRegistered(UUID author) {
+  public boolean isUserRegistered(UUID ID) {
     for (Profile profile : profiles) {
-      if (profile.getAuthor().equals(author)) {
+    	if (profile.getUserID().toString().equals(ID.toString())) {
         return true;
       }
     }
@@ -121,5 +107,14 @@ public class ProfileStore {
    */
   public void setProfiles(List<Profile> profiles) {
     this.profiles = profiles;
+  }
+  
+  /**
+   * Updates the Profile description locally and on the Google Database
+   */
+  public void updateProfile(Profile profile, String description) throws EntityNotFoundException
+  {
+	 profile.setDescription(description);
+	 persistentStorageAgent.updateProfile(profile, description);
   }
 }
