@@ -1,6 +1,7 @@
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.Date" %>
 <%@ page import="codeu.model.data.Message" %>
+<%@ page import="java.util.Collections" %>
 <%
 String username = (String) request.getAttribute("username");
 String description = (String) request.getAttribute("description");
@@ -76,6 +77,7 @@ List<Message> messages = (List<Message>) request.getAttribute("messages");
     	
     	<hr/>
     	
+    	<% Collections.sort(messages); %>
     	<h2><%= username %>'s Sent Messages</h2>
     	<div id="chat">
       		<ul>
