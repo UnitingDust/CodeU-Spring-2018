@@ -90,8 +90,8 @@ void setProfileStore(ProfileStore profileStore) {
    }
    
 
-   //if not, creates the user and profile
-   //forwards to login page 
+   // if not, creates the user and profile
+   // forwards to login page 
    User user = new User(UUID.randomUUID(), username, passwordHash, Instant.now());
    userStore.addUser(user);
   

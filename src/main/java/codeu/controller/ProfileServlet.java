@@ -140,15 +140,14 @@ public class ProfileServlet extends HttpServlet {
     String description = request.getParameter("editDescription");
     String cleanDescription = Jsoup.clean(description, Whitelist.none());
     
-    try 
-    {
+    try {
     	// Update profile with new description
 		profileStore.updateProfile(profileStore.getProfile(ID), cleanDescription);
-	} 
+    } 
     
     catch (EntityNotFoundException e) {
 		e.printStackTrace();
-	}
+    }
 
     response.sendRedirect("/profile/" + username);
   }
