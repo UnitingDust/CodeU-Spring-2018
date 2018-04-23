@@ -7,6 +7,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 
+import com.google.appengine.api.datastore.EntityNotFoundException;
+
 import codeu.model.data.Conversation;
 import codeu.model.data.Message;
 import codeu.model.data.Profile;
@@ -84,5 +86,16 @@ public class PersistentStorageAgentTest {
             UUID.randomUUID(), "test content");
     persistentStorageAgent.writeThrough(profile);
     Mockito.verify(mockPersistentDataStore).writeThrough(profile);
+  }
+  
+  @Test
+  public void testUpdateProfile() throws EntityNotFoundException {
+    Profile profile =
+        new Profile(
+            UUID.randomUUID(), "test content");
+    
+    String description = "test_content_2";
+    persistentStorageAgent.updateProfile(profile, description);
+    Mockito.verify(mockPersistentDataStore).updateProfile(profile, description);
   }
 }
