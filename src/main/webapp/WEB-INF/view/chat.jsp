@@ -1,12 +1,9 @@
 <%--
   Copyright 2017 Google Inc.
-
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
   You may obtain a copy of the License at
-
      http://www.apache.org/licenses/LICENSE-2.0
-
   Unless required by applicable law or agreed to in writing, software
   distributed under the License is distributed on an "AS IS" BASIS,
   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -72,16 +69,12 @@ StylizedTextParser messageParser = new StylizedTextParser();
 
 <h1><strong>Gossip Unloading...</strong></h1>
 <img " src="http://ichef.bbci.co.uk/corporate2/images/width/live/p0/53/d3/p053d3rz.jpg/624" width="750" height="150"> 
-
-
  <h2><strong> Add Some Jazz to Your Gossip</strong></h2>
       <ul>  
        <li><i>Italics: </i>  _italics_</li> 
         <li><b>Bold: </b> *Bold*</li> 
          <li><i><b>Bold-Italics: </b><i/> *_bold-italics_* </li> 
-
        </ul>
-
     <div id="chat">
       <ul>
     <%
@@ -96,9 +89,7 @@ StylizedTextParser messageParser = new StylizedTextParser();
     %>
       </ul>
     </div>
-
     <hr/>
-
     <% if (request.getSession().getAttribute("user") != null) { %>
     <form action="/chat/<%= conversation.getTitle() %>" method="POST">
         <input type="text" name="message">
