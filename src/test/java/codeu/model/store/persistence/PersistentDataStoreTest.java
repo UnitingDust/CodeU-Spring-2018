@@ -5,6 +5,8 @@ import codeu.model.data.Conversation;
 import codeu.model.data.Message;
 import codeu.model.data.User;
 import codeu.model.data.Profile;
+
+import com.google.appengine.api.datastore.EntityNotFoundException;
 import com.google.appengine.tools.development.testing.LocalDatastoreServiceTestConfig;
 import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
 import java.time.Instant;
@@ -150,28 +152,20 @@ public class PersistentDataStoreTest {
   }
   
   @Test
-  public void testSaveAndLoadProfiles() throws PersistentDataStoreException {
+  public void testSaveAndLoadProfiles() throws PersistentDataStoreException, EntityNotFoundException {
 	  UUID idOne = UUID.randomUUID();
 	  String description1 = "test_1";
 	  Profile profile1 = new Profile(idOne, description1);
-	  
-	  UUID idTwo = UUID.randomUUID();
-	  String description2 = "test_2";
-	  Profile profile2 = new Profile(idTwo, description2);
-	  
-	  // Save the Profiles
+	  	  
+	  // Save the Profile and change description
 	  persistentDataStore.writeThrough(profile1);
-	  persistentDataStore.writeThrough(profile2);
+	  persistentDataStore.updateProfile(profile1, "different");
 	  
 	  List<Profile> resultProfiles = persistentDataStore.loadProfiles();
 	  
-	  // Confirm the saved profiles were the ones that we initially loaded into the database
+	  // Confirm the profile's description got modified on Google Database
 	  Profile resultProfileOne = resultProfiles.get(0);
 	  Assert.assertEquals(idOne, resultProfileOne.getUserID());
-	  Assert.assertEquals(description1, resultProfileOne.getDescription());
-	  
-	  Profile resultProfileTwo = resultProfiles.get(1);
-	  Assert.assertEquals(idTwo, resultProfileTwo.getUserID());
-	  Assert.assertEquals(description2, resultProfileTwo.getDescription());
+	  Assert.assertEquals(resultProfileOne.getDescription(), "different");
   }
 }

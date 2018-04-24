@@ -22,8 +22,13 @@ import codeu.model.data.User;
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
+import com.google.appengine.api.datastore.EntityNotFoundException;
+import com.google.appengine.api.datastore.Key;
+import com.google.appengine.api.datastore.KeyFactory;
 import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
+
+
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
@@ -214,11 +219,20 @@ public class PersistentDataStore {
   
   /** Write a Profile object to the Datastore service. */
   public void writeThrough(Profile profile) {
-    Entity conversationEntity = new Entity("chat-profiles");
+    Entity profileEntity = new Entity("chat-profiles", profile.getUserID().toString());
+    profileEntity.setProperty("user_uuid", profile.getUserID().toString());
+    profileEntity.setProperty("description", profile.getDescription());
     
-    conversationEntity.setProperty("user_uuid", profile.getUserID().toString());
-    conversationEntity.setProperty("description", profile.getDescription());
+    datastore.put(profileEntity);
+  }
+  
+  /** Update a Profile object in the DataStore service **/
+  public void updateProfile(Profile profile, String description) throws EntityNotFoundException {
+    Key key = KeyFactory.createKey("chat-profiles", profile.getUserID().toString());
     
-    datastore.put(conversationEntity);
+    Entity profileEntity = datastore.get(key);
+    profileEntity.setProperty("description", description);
+    
+    datastore.put(profileEntity);
   }
 }
