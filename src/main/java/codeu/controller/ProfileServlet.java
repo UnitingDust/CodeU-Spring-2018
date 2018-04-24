@@ -21,13 +21,21 @@ import codeu.model.store.basic.ProfileStore;
 import codeu.model.store.basic.MessageStore;
 import codeu.model.store.basic.UserStore;
 import java.io.IOException;
+
 import java.time.Instant;
+
 import java.util.List;
 import java.util.UUID;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import org.jsoup.Jsoup;
+import org.jsoup.safety.Whitelist;
+
+import com.google.appengine.api.datastore.EntityNotFoundException;
+
 
 /** Servlet class responsible for the profile page. */
 public class ProfileServlet extends HttpServlet {
@@ -65,7 +73,11 @@ public class ProfileServlet extends HttpServlet {
    * Sets the ProfileStore used by this servlet. This function provides a common setup method for use
    * by the test framework or the servlet's init() function.
    */
+
   void setProfileStore(ProfileStore userStore) {
+
+  void setProfileStore(ProfileStore profileStore) {
+
     this.profileStore = profileStore;
   }
 
@@ -84,6 +96,7 @@ public class ProfileServlet extends HttpServlet {
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response)
       throws IOException, ServletException {
+
     //Profile profile = profileStore.getProfile();
     String requestUrl = request.getRequestURI();
     String username = requestUrl.substring("/profile/".length());
@@ -92,6 +105,32 @@ public class ProfileServlet extends HttpServlet {
     List<Message> messages = messageStore.getAllMessages(id);
     request.setAttribute("profile", profile);
     request.setAttribute("messages", setMessages(messages));
+
+	  
+	// Parse username from URL link
+    String requestUrl = request.getRequestURI();
+    String username = requestUrl.substring("/profile/".length());
+    
+    User user = userStore.getUser(username);
+    request.setAttribute("username", username);
+    
+    // Check if user exists
+    if (user == null)
+    {
+    	request.setAttribute("error", "Invalid User");
+    }
+    
+    else
+    {
+    	UUID ID = userStore.getUser(username).getId();
+    	List<Message> messages = messageStore.getMessagesByUser(ID);
+    	request.setAttribute("messages", messages);
+    	
+    	Profile profile = profileStore.getProfile(ID);
+    	request.setAttribute("description", profile.getDescription());
+    }
+    
+
     request.getRequestDispatcher("/WEB-INF/view/profile.jsp").forward(request, response);
   }
 
@@ -102,6 +141,7 @@ public class ProfileServlet extends HttpServlet {
   public void doPost(HttpServletRequest request, HttpServletResponse response)
       throws IOException, ServletException {
 
+
         Profile profile = profileStore.getProfile(userID);
 
 
@@ -111,6 +151,38 @@ public class ProfileServlet extends HttpServlet {
 
     profileStore.setProfiles();
     response.sendRedirect("/profile/");
+  }
+}
+
+
+
+	// Parse username from URL link
+	String requestUrl = request.getRequestURI();
+	String username = requestUrl.substring("/profile/".length());
+	
+	// User isn't logged in anymore. Don't let them edit
+	if ((String) request.getSession().getAttribute("user" == null)
+	{
+		response.sendRedirect("/profile/" + username);
+	    return;
+	}
+		
+	UUID ID = userStore.getUser(username).getId();
+	
+	// Retrieve updated description and clean out any HTML tagging
+    String description = request.getParameter("editDescription");
+    String cleanDescription = Jsoup.clean(description, Whitelist.none());
+    
+    try {
+    	// Update profile with new description
+		profileStore.updateProfile(profileStore.getProfile(ID), cleanDescription);
+    } 
+    
+    catch (EntityNotFoundException e) {
+		e.printStackTrace();
+    }
+
+    response.sendRedirect("/profile/" + username);
   }
 }
 

@@ -19,7 +19,7 @@
      <a>Hello <%= request.getSession().getAttribute("user") %>!</a>
    <% } else{ %>
      <a href="/login">Login</a>
-   <% } %>
+   <% } %>   
  </nav>
 
  <div id="container">

@@ -1,6 +1,7 @@
 package codeu.model.store.basic;
 
 import codeu.model.data.Profile;
+import codeu.model.store.persistence.PersistentDataStoreException;
 import codeu.model.store.persistence.PersistentStorageAgent;
 import java.util.ArrayList;
 import java.util.List;
@@ -8,7 +9,9 @@ import java.util.UUID;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Mockito; 
+import org.mockito.Mockito;
+
+import com.google.appengine.api.datastore.EntityNotFoundException; 
 
 public class ProfileStoreTest {
 
@@ -65,6 +68,19 @@ public class ProfileStoreTest {
     Assert.assertFalse(profileStore.isUserRegistered(UUID.randomUUID()));
   }
 
+  @Test
+  public void testUpdateProfile() throws PersistentDataStoreException, EntityNotFoundException {
+	  UUID id = UUID.randomUUID();
+	  Profile inputProfile = new Profile(id, "test_description");
+
+	  profileStore.addProfile(inputProfile);
+	  Assert.assertEquals(profileStore.getProfile(id).getDescription(), "test_description");
+	  Mockito.verify(mockPersistentStorageAgent).writeThrough(inputProfile);
+	  
+	  profileStore.updateProfile(inputProfile, "different");
+	  Assert.assertEquals(profileStore.getProfile(id).getDescription(), "different");
+	  Mockito.verify(mockPersistentStorageAgent).updateProfile(inputProfile, "different");
+  }
   private void assertEquals(Profile expectedProfile, Profile actualProfile) {
     Assert.assertEquals(expectedProfile.getUserID(), actualProfile.getUserID());
     Assert.assertEquals(expectedProfile.getDescription(), actualProfile.getDescription());

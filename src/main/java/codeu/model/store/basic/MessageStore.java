@@ -102,6 +102,20 @@ public class MessageStore {
 
     return messagesInConversation;
   }
+  
+  /** Get the current set of messages that was sent by a specific user */
+  public List<Message> getMessagesByUser(UUID userID) {
+
+	    List<Message> messagesByUser = new ArrayList<>();
+
+	    for (Message message : messages) {
+	      if (message.getAuthorId().equals(userID)) {
+	        messagesByUser.add(message);
+	      }
+	    }
+
+	    return messagesByUser;
+  }
 
   /** Sets the List of Messages stored by this MessageStore. */
   public void setMessages(List<Message> messages) {
