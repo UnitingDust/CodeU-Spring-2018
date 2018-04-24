@@ -21,6 +21,9 @@ import codeu.model.store.basic.ProfileStore;
 import codeu.model.store.basic.MessageStore;
 import codeu.model.store.basic.UserStore;
 import java.io.IOException;
+
+import java.time.Instant;
+
 import java.util.List;
 import java.util.UUID;
 import javax.servlet.ServletException;
@@ -70,7 +73,11 @@ public class ProfileServlet extends HttpServlet {
    * Sets the ProfileStore used by this servlet. This function provides a common setup method for use
    * by the test framework or the servlet's init() function.
    */
+
+  void setProfileStore(ProfileStore userStore) {
+
   void setProfileStore(ProfileStore profileStore) {
+
     this.profileStore = profileStore;
   }
 
@@ -89,6 +96,16 @@ public class ProfileServlet extends HttpServlet {
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response)
       throws IOException, ServletException {
+
+    //Profile profile = profileStore.getProfile();
+    String requestUrl = request.getRequestURI();
+    String username = requestUrl.substring("/profile/".length());
+    UUID id = userStore.getUser(username).getId()
+    Profile profile = profileStore.getProfile(id);
+    List<Message> messages = messageStore.getAllMessages(id);
+    request.setAttribute("profile", profile);
+    request.setAttribute("messages", setMessages(messages));
+
 	  
 	// Parse username from URL link
     String requestUrl = request.getRequestURI();
@@ -113,6 +130,7 @@ public class ProfileServlet extends HttpServlet {
     	request.setAttribute("description", profile.getDescription());
     }
     
+
     request.getRequestDispatcher("/WEB-INF/view/profile.jsp").forward(request, response);
   }
 
@@ -123,12 +141,27 @@ public class ProfileServlet extends HttpServlet {
   public void doPost(HttpServletRequest request, HttpServletResponse response)
       throws IOException, ServletException {
 
+
+        Profile profile = profileStore.getProfile(userID);
+
+
+    String description = request.getParameter("description");
+
+    profile.updateProfile(description, profile);
+
+    profileStore.setProfiles();
+    response.sendRedirect("/profile/");
+  }
+}
+
+
+
 	// Parse username from URL link
 	String requestUrl = request.getRequestURI();
 	String username = requestUrl.substring("/profile/".length());
 	
 	// User isn't logged in anymore. Don't let them edit
-	if ((String) request.getSession().getAttribute("user") == null)
+	if ((String) request.getSession().getAttribute("user" == null)
 	{
 		response.sendRedirect("/profile/" + username);
 	    return;
@@ -152,4 +185,5 @@ public class ProfileServlet extends HttpServlet {
     response.sendRedirect("/profile/" + username);
   }
 }
+
 

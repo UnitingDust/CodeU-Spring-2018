@@ -108,6 +108,14 @@ public class ProfileStore {
   public void setProfiles(List<Profile> profiles) {
     this.profiles = profiles;
   }
+
+
+  public void updateProfileStore(String newDescription, Profile profile){
+      profile.setDescription(newDescription);
+      
+      
+}
+
   
   /**
    * Updates the Profile description locally and on the Google Database
@@ -117,4 +125,5 @@ public class ProfileStore {
 	 profile.setDescription(description);
 	 persistentStorageAgent.updateProfile(profile, description);
   }
+
 }
