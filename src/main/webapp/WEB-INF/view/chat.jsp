@@ -75,12 +75,13 @@ StylizedTextParser messageParser = new StylizedTextParser();
 
 
  <h2><strong> Add Some Jazz to Your Gossip</strong></h2>
-      <ul>  
-       <li><i>Italics: </i>  _italics_</li> 
-        <li><b>Bold: </b> *Bold*</li> 
-         <li><i><b>Bold-Italics: </b><i/> *_bold-italics_* </li> 
-
-       </ul>
+ <ul>  
+  <li><i>Italics:  </i>  _italics_</li> 
+   <li><b>Bold:  </b> *Bold*</li> 
+   <li><strike>Strikethrough:  </strike> ~strikethrough~</li>
+   <li><u>Underline:  </u> -underline-</li>
+   <li><code>Code:  </code> &#39;code&#39;</li> 
+  </ul>
 
     <div id="chat">
       <ul>

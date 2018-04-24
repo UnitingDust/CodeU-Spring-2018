@@ -141,9 +141,9 @@ public class ChatServlet extends HttpServlet {
     }
 
     String messageContent = request.getParameter("message");
-    String cleanedMessageContent = Jsoup.clean(messageContent, Whitelist.basic());   
-    StylizedTextParser messageParser = new StylizedTextParser(); 
-    String parsedContent = messageParser.parse(cleanedMessageContent);
+    // String cleanedMessageContent = Jsoup.clean(messageContent, Whitelist.basic());   
+    // StylizedTextParser messageParser = new StylizedTextParser(); 
+    // String parsedContent = messageParser.parse(cleanedMessageContent);
     
     //creates the new message
     Message message =
@@ -151,7 +151,7 @@ public class ChatServlet extends HttpServlet {
             UUID.randomUUID(),
             conversation.getId(),
             user.getId(),
-            parsedContent,
+            messageContent,
             Instant.now());
 
     messageStore.addMessage(message);
