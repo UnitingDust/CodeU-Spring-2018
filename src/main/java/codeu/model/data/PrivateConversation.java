@@ -38,7 +38,7 @@ public class PrivateConversation extends Conversation {
     private Timer timer; 
 
     // maps UUID to time user is scheduled to be surprised 
-    private HashMap<UUID, SurpriseTask> scheduledSurprises;  
+    public HashMap<UUID, SurpriseTask> scheduledSurprises;  
 
     // maps existing allowed users and whether or not they are admins 
     // default admin privileges set to true
