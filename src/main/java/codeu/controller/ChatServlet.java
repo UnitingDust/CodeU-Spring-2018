@@ -30,7 +30,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.jsoup.Jsoup;
 import org.jsoup.safety.Whitelist;
-import  codeu.controller.StylizedTextParser;
+import codeu.controller.StylizedTextParser;
 
 
 /** Servlet class responsible for the chat page. */
