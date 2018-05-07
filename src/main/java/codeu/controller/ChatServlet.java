@@ -115,8 +115,9 @@ public class ChatServlet extends HttpServlet {
    @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response)
       throws IOException, ServletException {
-
+	
     String username = (String) request.getSession().getAttribute("user");
+    
     if (username == null) {
       // user is not logged in, don't let them add a message
       response.sendRedirect("/login");
@@ -140,23 +141,35 @@ public class ChatServlet extends HttpServlet {
       return;
     }
 
-    String messageContent = request.getParameter("message");
-    // String cleanedMessageContent = Jsoup.clean(messageContent, Whitelist.basic());   
-    // StylizedTextParser messageParser = new StylizedTextParser(); 
-    // String parsedContent = messageParser.parse(cleanedMessageContent);
+    // Calendar Button was clicked
+    if (request.getParameter("action").equals("two"))
+    {
+    	// Testing to see the output 
+    	System.out.println("Subbmited time: " + request.getParameter("data"));
+    	
+    	
+    	response.sendRedirect("/chat/" + conversationTitle);
+    	return;
+    }
     
-    //creates the new message
-    Message message =
-        new Message(
-            UUID.randomUUID(),
-            conversation.getId(),
-            user.getId(),
-            messageContent,
-            Instant.now());
+    // Message Button was clicked
+    else if (request.getParameter("action").equals("one"))
+    {
+    	String messageContent = request.getParameter("message");
+        
+        //creates the new message
+        Message message =
+            new Message(
+                UUID.randomUUID(),
+                conversation.getId(),
+                user.getId(),
+                messageContent,
+                Instant.now());
 
-    messageStore.addMessage(message);
+        messageStore.addMessage(message);
 
-    // redirect to a GET request
-    response.sendRedirect("/chat/" + conversationTitle);
+        // redirect to a GET request
+        response.sendRedirect("/chat/" + conversationTitle);
+    } 
   }
 }

@@ -94,8 +94,19 @@ StylizedTextParser messageParser = new StylizedTextParser();
     <form action="/chat/<%= conversation.getTitle() %>" method="POST">
         <input type="text" name="message">
         <br/>
-        <button type="submit">Send</button>
+        <button type="submit" name="action" value="one">Send</button>
     </form>
+    
+    <hr/>
+    
+    <h3>Enter the Event Surprise Time</h3>
+    <form action="/chat/<%= conversation.getTitle() %>" method="POST">
+        <input id="date" type="date" name="data">
+        <br/>
+        <button type="submit" name="action" value="two">Submit</button>
+    </form>
+    
+    
     <% } else { %>
       <p><a href="/login">Login</a> to send a message.</p>
     <% } %>

@@ -135,7 +135,7 @@ public class ChatServletTest {
   public void testDoPost_ConversationNotFound() throws IOException, ServletException {
     Mockito.when(mockRequest.getRequestURI()).thenReturn("/chat/test_conversation");
     Mockito.when(mockSession.getAttribute("user")).thenReturn("test_username");
-
+    
     User fakeUser = new User(UUID.randomUUID(), "test_username", "test_password", Instant.now());
     Mockito.when(mockUserStore.getUser("test_username")).thenReturn(fakeUser);
 
@@ -152,6 +152,10 @@ public class ChatServletTest {
   public void testDoPost_StoresMessage() throws IOException, ServletException {
     Mockito.when(mockRequest.getRequestURI()).thenReturn("/chat/test_conversation");
     Mockito.when(mockSession.getAttribute("user")).thenReturn("test_username");
+    
+    
+    Mockito.when(mockRequest.getParameter("action")).thenReturn("one");
+
 
     User fakeUser = new User(UUID.randomUUID(), "test_username", "test_password", Instant.now());
     Mockito.when(mockUserStore.getUser("test_username")).thenReturn(fakeUser);
@@ -176,6 +180,9 @@ public class ChatServletTest {
   public void testDoPost_CleansHtmlContent() throws IOException, ServletException {
     Mockito.when(mockRequest.getRequestURI()).thenReturn("/chat/test_conversation");
     Mockito.when(mockSession.getAttribute("user")).thenReturn("test_username");
+    
+    Mockito.when(mockRequest.getParameter("action")).thenReturn("one");
+
     //creates fake user
     User fakeUser = new User(UUID.randomUUID(), "test_username", "test_password", Instant.now());
     Mockito.when(mockUserStore.getUser("test_username")).thenReturn(fakeUser);
