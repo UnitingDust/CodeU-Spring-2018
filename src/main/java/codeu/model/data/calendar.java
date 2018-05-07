@@ -19,13 +19,13 @@ package codeu.model.data;
 
 
 /** Class representing a calendar. Dates are sent by a User in a Group Conversation. */
-public class Calendar implements Comparable<Conversation>{
+public class calendar{
 
-  private final String month;
-  private final String day;
-  private final String year;
-  private final String hour;
-  private final String minute;
+  private String month;
+  private String day;
+  private String year;
+  private String hour;
+  private String minute;
 
 
   /**
@@ -37,7 +37,7 @@ public class Calendar implements Comparable<Conversation>{
    * @param hour of the event
    * @param minute of the event
    */
-  public Calendar(String month, String day, String year, String hour, String minute) {
+  public calendar(String month, String day, String year, String hour, String minute) {
     this.month = month;
     this.day = day;
     this.year = year;
@@ -47,36 +47,36 @@ public class Calendar implements Comparable<Conversation>{
 
   /** Returns the month of the event. */
   public String getMonth() {
-    return month;
+    return this.month;
   }
 
   /** Returns the day of the event */
   public String getDay() {
-    return day;
+    return this.day;
   }
 
   /** Returns the year of the event */
   public String getYear() {
-    return year;
+    return this.year;
   }
 
    /** Returns the hour of the event */
   public String getHour() {
-    return hour;
+    return this.hour;
   }
 
    /** Returns the minute of the event */
   public String getMinute() {
-    return minute;
+    return this.minute;
   }
 
   public void setDate(String month, String day, String year, String hour, String minute){
-    this.month = month
-    this.day = day
-    this.year = year
-    //this.hour = hour
-    //this.minute = minute
-    
+    this.month = month;
+    this.day = day;
+    this.year = year;
+    //this.hour = hour;
+    //this.minute = minute;
+
   }
 
 
