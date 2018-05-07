@@ -79,7 +79,7 @@ public class Conversation {
     this.title = title;
     this.type = type; 
 
-    if (type.equals("private")) {
+    if (type != null && type.equals("private")) {
       timer = new Timer(); 
       scheduledSurprises = new HashMap<UUID, SurpriseTask>(); 
       existingUsers = new HashMap<UUID, Boolean>(); 
@@ -119,6 +119,8 @@ public class Conversation {
 
   /** Returns the type of this Conversation. */
   public String getType() {
+    if (type == null) 
+      return "public"; 
     return type;
   }
 

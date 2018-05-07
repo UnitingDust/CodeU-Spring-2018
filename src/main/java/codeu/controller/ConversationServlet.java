@@ -70,8 +70,10 @@ public class ConversationServlet extends HttpServlet {
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response)
       throws IOException, ServletException {
-    List<Conversation> conversations = conversationStore.getAllConversations();
-    request.setAttribute("conversations", conversations);
+    List<Conversation> publicConversations = conversationStore.getPublicConversations();
+    request.setAttribute("public-conversations", publicConversations);
+    List<Conversation> privateConversations = conversationStore.getPrivateConversations(); 
+    request.setAttribute("private-conversations", privateConversations); 
     request.getRequestDispatcher("/WEB-INF/view/conversations.jsp").forward(request, response);
   }
 
@@ -99,6 +101,14 @@ public class ConversationServlet extends HttpServlet {
       return;
     }
 
+    String conversationType = request.getParameter("conversationType"); 
+    if (conversationType == null) {
+      // conversation type not specified
+      request.setAttribute("error", "Please specify conversation type"); 
+      response.sendRedirect("/conversations"); 
+      return; 
+    }
+
     String conversationTitle = request.getParameter("conversationTitle");
     if (!conversationTitle.matches("[\\w*]*")) {
       request.setAttribute("error", "Please enter only letters and numbers.");
@@ -114,7 +124,7 @@ public class ConversationServlet extends HttpServlet {
     }
 
     Conversation conversation =
-        new Conversation(UUID.randomUUID(), user.getId(), conversationTitle, Instant.now());
+        new Conversation(UUID.randomUUID(), user.getId(), conversationTitle, Instant.now(), conversationType);
 
     conversationStore.addConversation(conversation);
     response.sendRedirect("/chat/" + conversationTitle);

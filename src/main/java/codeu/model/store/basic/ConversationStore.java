@@ -86,6 +86,28 @@ public class ConversationStore {
     return conversations;
   }
 
+  /** Access the current set of public conversations known to the application. */
+  public List<Conversation> getPublicConversations() {
+    List<Conversation> publicConversations = new ArrayList<Conversation>(); 
+    for (Conversation conversation : conversations) {
+      if (conversation.getType().equals("public")) {
+        publicConversations.add(conversation); 
+      }
+    }
+    return publicConversations; 
+  }
+
+  /** Access the current set of private conversations known to the application. */
+  public List<Conversation> getPrivateConversations() {
+    List<Conversation> privateConversations = new ArrayList<Conversation>(); 
+    for (Conversation conversation : conversations) {
+      if (conversation.getType().equals("private")) {
+        privateConversations.add(conversation); 
+      }
+    }
+    return privateConversations; 
+  }
+
   /** Add a new conversation to the current set of conversations known to the application. */
   public void addConversation(Conversation conversation) {
     conversations.add(conversation);
