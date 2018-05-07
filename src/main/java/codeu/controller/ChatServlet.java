@@ -145,7 +145,7 @@ public class ChatServlet extends HttpServlet {
     if (request.getParameter("action").equals("two"))
     {
     	// Testing to see the output 
-    	System.out.println("Subbmited time: " + request.getParameter("data"));
+    	System.out.println("Submited time: " + request.getParameter("data"));
     	
     	
     	response.sendRedirect("/chat/" + conversationTitle);
