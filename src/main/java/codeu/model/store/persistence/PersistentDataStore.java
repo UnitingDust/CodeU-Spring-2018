@@ -19,10 +19,13 @@ import codeu.model.data.Conversation;
 import codeu.model.data.Message;
 import codeu.model.data.Profile;
 import codeu.model.data.User;
+import sun.jvm.hotspot.debugger.posix.elf.ELFSectionHeader;
+
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.EntityNotFoundException;
+import com.google.appengine.api.datastore.EmbeddedEntity; 
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
 import com.google.appengine.api.datastore.PreparedQuery;
@@ -33,6 +36,7 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.HashMap;
 
 /**
  * This class handles all interactions with Google App Engine's Datastore service. On startup it
@@ -108,6 +112,18 @@ public class PersistentDataStore {
         Instant creationTime = Instant.parse((String) entity.getProperty("creation_time"));
         String conversationType = (String) entity.getProperty("conversationType"); 
         Conversation conversation = new Conversation(uuid, ownerUuid, title, creationTime, conversationType);
+
+        // load allowed users from embedded entity 
+        EmbeddedEntity ee = (EmbeddedEntity) entity.getProperty("allowedUsers");  
+        if (ee != null) {
+          for (String key : ee.getProperties().keySet()) {
+            if ((Boolean) ee.getProperty(key) == true)
+              conversation.addAdmin(UUID.fromString(key)); 
+            else 
+              conversation.addUser(UUID.fromString(key)); 
+          }
+        }
+
         conversations.add(conversation);
       } catch (Exception e) {
         // In a production environment, errors should be very rare. Errors which may
@@ -216,6 +232,19 @@ public class PersistentDataStore {
     conversationEntity.setProperty("title", conversation.getTitle());
     conversationEntity.setProperty("creation_time", conversation.getCreationTime().toString());
     conversationEntity.setProperty("conversationType", conversation.getType()); 
+
+    HashMap<UUID, Boolean> allowedUsers = conversation.getAllowedUsers(); 
+    EmbeddedEntity ee; 
+    if (allowedUsers != null) {
+      ee = new EmbeddedEntity(); 
+      for (UUID id : allowedUsers.keySet()) 
+        ee.setProperty(id.toString(), allowedUsers.get(id)); 
+    }
+    else {
+      ee = null; 
+    }
+    conversationEntity.setProperty("allowedUsers", ee); 
+
     datastore.put(conversationEntity);
   }
   
