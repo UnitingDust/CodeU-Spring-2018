@@ -104,8 +104,8 @@ public class ConversationServlet extends HttpServlet {
     String conversationType = request.getParameter("conversationType"); 
     if (conversationType == null) {
       // conversation type not specified
-      request.setAttribute("error", "Please specify conversation type"); 
-      response.sendRedirect("/conversations"); 
+      request.setAttribute("error", "Please specify conversation type."); 
+      request.getRequestDispatcher("/WEB-INF/view/conversations.jsp").forward(request, response);
       return; 
     }
 

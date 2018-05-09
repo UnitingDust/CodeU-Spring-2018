@@ -18,6 +18,8 @@ import codeu.model.data.Conversation;
 import codeu.model.data.User;
 import codeu.model.store.basic.ConversationStore;
 import codeu.model.store.basic.UserStore;
+import jdk.internal.jline.internal.TestAccessible;
+
 import java.io.IOException;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -159,5 +161,22 @@ public class ConversationServletTest {
     Assert.assertEquals(conversationArgumentCaptor.getValue().getTitle(), "test_conversation");
 
     Mockito.verify(mockResponse).sendRedirect("/chat/test_conversation");
+  }
+
+  @Test
+  public void testDoPost_NoConversationType() throws IOException, ServletException {
+    Mockito.when(mockRequest.getParameter("conversationTitle")).thenReturn("test_name");
+    Mockito.when(mockRequest.getParameter("conversationType")).thenReturn(null);
+    Mockito.when(mockSession.getAttribute("user")).thenReturn("test_username");
+
+    User fakeUser = new User(UUID.randomUUID(), "test_username", "test_password", Instant.now());
+    Mockito.when(mockUserStore.getUser("test_username")).thenReturn(fakeUser);
+
+    conversationServlet.doPost(mockRequest, mockResponse);
+
+    Mockito.verify(mockConversationStore, Mockito.never())
+        .addConversation(Mockito.any(Conversation.class));
+    Mockito.verify(mockRequest).setAttribute("error", "Please specify conversation type.");
+    Mockito.verify(mockRequestDispatcher).forward(mockRequest, mockResponse); 
   }
 }

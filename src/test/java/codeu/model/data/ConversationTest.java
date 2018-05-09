@@ -34,5 +34,23 @@ public class ConversationTest {
     Assert.assertEquals(owner, conversation.getOwnerId());
     Assert.assertEquals(title, conversation.getTitle());
     Assert.assertEquals(creation, conversation.getCreationTime());
+    Assert.assertEquals("public", conversation.getType()); 
+  }
+
+  @Test
+  public void testCreatePrivate() {
+    UUID id = UUID.randomUUID();
+    UUID owner = UUID.randomUUID();
+    String title = "Test_Title";
+    Instant creation = Instant.now();
+    String type = "private"; 
+
+    Conversation conversation = new Conversation(id, owner, title, creation, type);
+
+    Assert.assertEquals(id, conversation.getId());
+    Assert.assertEquals(owner, conversation.getOwnerId());
+    Assert.assertEquals(title, conversation.getTitle());
+    Assert.assertEquals(creation, conversation.getCreationTime());
+    Assert.assertEquals(type, conversation.getType()); 
   }
 }
