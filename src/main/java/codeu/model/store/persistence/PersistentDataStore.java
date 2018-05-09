@@ -19,7 +19,6 @@ import codeu.model.data.Conversation;
 import codeu.model.data.Message;
 import codeu.model.data.Profile;
 import codeu.model.data.User;
-import sun.jvm.hotspot.debugger.posix.elf.ELFSectionHeader;
 
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
