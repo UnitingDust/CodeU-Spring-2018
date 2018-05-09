@@ -128,15 +128,17 @@ public class Conversation {
   public HashMap<UUID, Boolean> getAllowedUsers() {
     return allowedUsers; 
   }
-  
+
   /* Returns true if user is allowed in private conversation */
   public boolean isAllowedUser(UUID id) {
       return allowedUsers.containsKey(id); 
   }
 
-  /* Returns true if  user is an admin */
+  /* Returns true if user is an admin */
   public boolean isAdmin(UUID id) {
-    return allowedUsers.get(id); 
+    if (allowedUsers.containsKey(id))
+      return allowedUsers.get(id); 
+    return false; 
   }
 
   /* schedules a surprise at specified time for user id to be added into this conversation */
