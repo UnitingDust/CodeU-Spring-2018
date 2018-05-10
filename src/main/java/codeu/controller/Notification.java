@@ -10,9 +10,6 @@ import java.util.UUID;
 
 public class Notification{
 
-// Fields
-
-
 	//the user who is receiving the notification
 	private User userNotified;
 
@@ -25,11 +22,6 @@ public class Notification{
 //message of the notification
 	private String notificationMsg;
 
-
-	
-
-	// Methods
-	
 	//Constructor
 	public Notification(User user, String title, String message){
 
@@ -37,7 +29,6 @@ public class Notification{
 		//senderGC = grChat;
 		notificationTitle = title;
 		notificationMsg = message;
-
 	}
 
 	//returns the title of the message
@@ -70,15 +61,4 @@ public class Notification{
 		notificationMsg = msg;
 		
 	}
-
-public static void main(String[] args){
-    User testUser = new User(UUID.randomUUID(), "test_username", "test_password", Instant.now());
-    testUser.setNotificationTrue();
-   Notification testN =  testUser.makeNotification("hi", "hello");
-   System.out.println("this is the notif titile: " + testN.getTitle());
-    System.out.println("this is the notif message: " + testN.getMessage() );
-     System.out.println("this is the notif user: " + testN.getUser().getName() );
-}
-
-
 }
