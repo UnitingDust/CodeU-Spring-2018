@@ -12,6 +12,7 @@ import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
 import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
+import java.util.HashMap;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -89,7 +90,12 @@ public class PersistentDataStoreTest {
     String titleTwo = "Test_Title_Two";
     Instant creationTwo = Instant.ofEpochMilli(2000);
     String typeTwo = "private"; 
+    HashMap<UUID, Boolean> allowedUsersTwo = new HashMap<UUID, Boolean>(); 
+    allowedUsersTwo.put(ownerTwo, true); 
+    allowedUsersTwo.put(ownerOne, false); 
     Conversation inputConversationTwo = new Conversation(idTwo, ownerTwo, titleTwo, creationTwo, typeTwo);
+    inputConversationTwo.addUser(ownerOne); 
+    inputConversationTwo.addAdmin(ownerTwo); 
 
     // save
     persistentDataStore.writeThrough(inputConversationOne);
@@ -112,6 +118,16 @@ public class PersistentDataStoreTest {
     Assert.assertEquals(titleTwo, resultConversationTwo.getTitle());
     Assert.assertEquals(creationTwo, resultConversationTwo.getCreationTime());
     Assert.assertEquals(typeTwo, resultConversationTwo.getType());
+    this.assertEquals(allowedUsersTwo, inputConversationTwo.getAllowedUsers()); 
+  }
+
+
+  // helper function to compare ACLs of conversations
+  private void assertEquals(HashMap<UUID, Boolean> allowedUsersOne, HashMap<UUID,  Boolean> allowedUsersTwo) {
+    Assert.assertEquals(allowedUsersOne.size(), allowedUsersTwo.size()); 
+    for (UUID id : allowedUsersOne.keySet()) {
+      assert(allowedUsersOne.get(id) == allowedUsersTwo.get(id)); 
+    }
   }
 
   @Test

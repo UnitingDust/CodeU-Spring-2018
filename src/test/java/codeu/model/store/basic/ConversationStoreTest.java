@@ -92,6 +92,12 @@ public class ConversationStoreTest {
     Assert.assertEquals(
         expectedConversation.getCreationTime(), actualConversation.getCreationTime());
     Assert.assertEquals(
-      expectedConversation.getType(), actualConversation.getType()); 
+      expectedConversation.getType(), actualConversation.getType());
+    if (expectedConversation.getType().equals("private")) {
+      for (UUID id : expectedConversation.getAllowedUsers().keySet()) {
+        assert(expectedConversation.isAllowedUser(id) == actualConversation.isAllowedUser(id)); 
+        assert(expectedConversation.isAdmin(id) == actualConversation.isAdmin(id)); 
+      }
+    }
   }
 }

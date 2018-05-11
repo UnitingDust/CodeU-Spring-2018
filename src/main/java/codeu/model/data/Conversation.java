@@ -46,7 +46,7 @@ public class Conversation {
 
     public void run() {
         System.out.println("User" + id + " surprised!"); // change to send alert to notification class 
-        existingUsers.put(id, true); 
+        allowedUsers.put(id, true); 
         scheduledSurprises.remove(id); 
         timer.cancel(); 
     }
@@ -55,7 +55,7 @@ public class Conversation {
   // maps existing allowed users and whether or not they are admins 
   // default admin privileges set to true
   // null if type == "public"
-  private HashMap<UUID, Boolean> existingUsers; 
+  public HashMap<UUID, Boolean> allowedUsers; 
 
   // timer to keep track of TimerTasks
   private Timer timer; 
@@ -71,6 +71,7 @@ public class Conversation {
    * @param title the title of this Conversation
    * @param creation the creation time of this Conversation
    * @param type the type (public/private) of this Conversation
+   * @param allowedUsers the list of users with access to this Conversation
    */
   public Conversation(UUID id, UUID owner, String title, Instant creation, String type) {
     this.id = id;
@@ -82,11 +83,11 @@ public class Conversation {
     if (type != null && type.equals("private")) {
       timer = new Timer(); 
       scheduledSurprises = new HashMap<UUID, SurpriseTask>(); 
-      existingUsers = new HashMap<UUID, Boolean>(); 
-      existingUsers.put(owner, true); 
+      allowedUsers = new HashMap<UUID, Boolean>(); 
+      allowedUsers.put(owner, true); 
     }
     else {
-      existingUsers = null; 
+      allowedUsers = null; 
       timer = null; 
       scheduledSurprises = null; 
     }
@@ -124,21 +125,27 @@ public class Conversation {
     return type;
   }
 
+  public HashMap<UUID, Boolean> getAllowedUsers() {
+    return allowedUsers; 
+  }
+
   /* Returns true if user is allowed in private conversation */
   public boolean isAllowedUser(UUID id) {
-      return existingUsers.containsKey(id); 
+      return allowedUsers.containsKey(id); 
   }
 
-  /* Returns true if  user is an admin */
+  /* Returns true if user is an admin */
   public boolean isAdmin(UUID id) {
-    return existingUsers.get(id); 
+    if (allowedUsers.containsKey(id))
+      return allowedUsers.get(id); 
+    return false; 
   }
 
-    /* schedules a surprise at specified time for user id to be added into this conversation */
-    public void scheduleSurprise(UUID id, Date time) {
-      SurpriseTask surprise = new SurpriseTask(id);  
-      timer.schedule(surprise, time); 
-      scheduledSurprises.put(id, surprise); 
+  /* schedules a surprise at specified time for user id to be added into this conversation */
+  public void scheduleSurprise(UUID id, Date time) {
+    SurpriseTask surprise = new SurpriseTask(id);  
+    timer.schedule(surprise, time); 
+    scheduledSurprises.put(id, surprise); 
   }
 
   /* checks surprise time of user id */
@@ -149,9 +156,13 @@ public class Conversation {
       return cal; 
   }
 
-  /* adds user id to existing users with admin privileges */
+  /* adds user id to allowed users */
   public void addUser(UUID id) {
-      existingUsers.put(id, true); 
+      allowedUsers.put(id, false); 
+  }
+
+  public void addAdmin(UUID id) {
+    allowedUsers.put(id, true); 
   }
 
   /* checks if any surprises should have happened but have not yet, and returns false if so, may be useful for debugging */
