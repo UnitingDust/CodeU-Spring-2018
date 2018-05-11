@@ -141,15 +141,25 @@ public class ChatServlet extends HttpServlet {
       return;
     }
 
-    // Calendar Button was clicked
+    // Time Button was clicked
     if (request.getParameter("action").equals("two"))
     {
     	// Testing to see the output 
-    	System.out.println("Submited time: " + request.getParameter("data"));
+    	System.out.println("Submited date: " + request.getParameter("data"));
     	
     	
     	response.sendRedirect("/chat/" + conversationTitle);
     	return;
+    }
+
+    if (request.getParameter("action").equals("three"))
+    {
+      // Testing to see the output 
+      System.out.println("Submited time: " + request.getParameter("time"));
+      
+      
+      response.sendRedirect("/chat/" + conversationTitle);
+      return;
     }
     
     // Message Button was clicked
