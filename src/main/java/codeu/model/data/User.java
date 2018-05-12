@@ -16,6 +16,7 @@ package codeu.model.data;
 
 import java.time.Instant;
 import java.util.UUID;
+import codeu.controller.Notification;
 
 /** Class representing a registered user. */
 public class User {
@@ -23,6 +24,8 @@ public class User {
   private final String name;
   private final String password;
   private final Instant creation;
+  private boolean hasNotification;
+  private Notification notif;
 
   /**
    * Constructs a new User.
@@ -37,6 +40,7 @@ public class User {
     this.name = name;
 	this.password = password; 
     this.creation = creation;
+    hasNotification = false;
   }
 
   /** Returns the ID of this User. */
@@ -58,4 +62,20 @@ public class User {
   public Instant getCreationTime() {
     return creation;
   }
+
+  public boolean hasNotification(){
+    return hasNotification;
+  }
+
+  public void setNotificationTrue(){
+    hasNotification = true;
+  }
+
+ //make and retunr notif
+    public Notification makeNotification( String title, String msg){
+    notif = new Notification(this,title,msg);
+    this.setNotificationTrue();
+    return notif;
+  }
+
 }
