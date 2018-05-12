@@ -21,6 +21,7 @@ import codeu.model.store.basic.UserStore;
 import java.io.IOException;
 import java.time.Instant;
 import java.util.List;
+import java.util.ArrayList; 
 import java.util.UUID;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -70,8 +71,24 @@ public class ConversationServlet extends HttpServlet {
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response)
       throws IOException, ServletException {
-    List<Conversation> conversations = conversationStore.getAllConversations();
-    request.setAttribute("conversations", conversations);
+    List<Conversation> publicConversations = conversationStore.getPublicConversations();
+    request.setAttribute("public-conversations", publicConversations);
+
+    // only send conversations accessible to current user
+    List<Conversation> privateConversations = conversationStore.getPrivateConversations(); 
+    List<Conversation> allowedConversations = new ArrayList<Conversation>(); 
+    String username = (String) request.getSession().getAttribute("user");
+    if (username != null) {
+      User user = userStore.getUser(username);
+      if (user != null) {
+        UUID userID = user.getId(); 
+        for (Conversation c : privateConversations) {
+          if (c.isAllowedUser(userID))
+            allowedConversations.add(c); 
+        }
+      }
+    }
+    request.setAttribute("private-conversations", allowedConversations); 
     request.getRequestDispatcher("/WEB-INF/view/conversations.jsp").forward(request, response);
   }
 
@@ -99,6 +116,14 @@ public class ConversationServlet extends HttpServlet {
       return;
     }
 
+    String conversationType = request.getParameter("conversationType"); 
+    if (conversationType == null) {
+      // conversation type not specified
+      request.setAttribute("error", "Please specify conversation type."); 
+      request.getRequestDispatcher("/WEB-INF/view/conversations.jsp").forward(request, response);
+      return; 
+    }
+
     String conversationTitle = request.getParameter("conversationTitle");
     if (!conversationTitle.matches("[\\w*]*")) {
       request.setAttribute("error", "Please enter only letters and numbers.");
@@ -114,9 +139,11 @@ public class ConversationServlet extends HttpServlet {
     }
 
     Conversation conversation =
-        new Conversation(UUID.randomUUID(), user.getId(), conversationTitle, Instant.now());
+        new Conversation(UUID.randomUUID(), user.getId(), conversationTitle, Instant.now(), conversationType);
 
     conversationStore.addConversation(conversation);
+
+
     response.sendRedirect("/chat/" + conversationTitle);
   }
 }

@@ -52,28 +52,33 @@
             <label class="form-control-label">Title:</label>
           <input type="text" name="conversationTitle">
         </div>
+        <div class="form-group">
+            <label class="form-control-label">Type:</label>
+            <input type="radio" name="conversationType" value="public"> Public
+            <input type="radio" name="conversationType" value="private"> Private
+        </div>
 
         <button type="submit">Create</button>
       </form>
 
       <hr/>
     <% } %>
-
-    <h1>Conversations</h1>
+      <div style="float:left; width: 50%">
+    <h1>Public Conversations</h1>
 
     <%
-    List<Conversation> conversations =
-      (List<Conversation>) request.getAttribute("conversations");
-    if(conversations == null || conversations.isEmpty()){
+    List<Conversation> publicConversations =
+      (List<Conversation>) request.getAttribute("public-conversations");
+    if(publicConversations == null || publicConversations.isEmpty()){
     %>
-      <p>Create a conversation to get started.</p>
+      <p>Create a public conversation to get started.</p>
     <%
     }
     else{
     %>
       <ul class="mdl-list">
     <%
-      for(Conversation conversation : conversations){
+      for(Conversation conversation : publicConversations){
     %>
       <li><a href="/chat/<%= conversation.getTitle() %>">
         <%= conversation.getTitle() %></a></li>
@@ -84,7 +89,36 @@
     <%
     }
     %>
-    <hr/>
+  </div>
+
+  <div style="float: right; width: 50%;">
+
+    <h1>Private Conversations</h1>
+
+    <%
+    List<Conversation> privateConversations =
+      (List<Conversation>) request.getAttribute("private-conversations");
+    if(privateConversations == null || privateConversations.isEmpty()){
+    %>
+      <p>Create a private conversation to get started.</p>
+    <%
+    }
+    else{
+    %>
+      <ul class="mdl-list">
+    <%
+      for(Conversation conversation : privateConversations){
+    %>
+      <li><a href="/chat/<%= conversation.getTitle() %>">
+        <%= conversation.getTitle() %></a></li>
+    <%
+      }
+    %>
+      </ul>
+    <%
+    }
+    %>
+  </div>
   </div>
 </body>
 </html>

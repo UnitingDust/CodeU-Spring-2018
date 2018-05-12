@@ -18,6 +18,7 @@
 <%
 Conversation conversation = (Conversation) request.getAttribute("conversation");
 List<Message> messages = (List<Message>) request.getAttribute("messages");
+List<String> usernames = (List<String>) request.getAttribute("usernames"); 
 StylizedTextParser messageParser = new StylizedTextParser(); 
 %>
 
@@ -70,17 +71,22 @@ StylizedTextParser messageParser = new StylizedTextParser();
 <h1><strong>Gossip Unloading...</strong></h1>
 <img " src="http://ichef.bbci.co.uk/corporate2/images/width/live/p0/53/d3/p053d3rz.jpg/624" width="750" height="150"> 
  <h2><strong> Add Some Jazz to Your Gossip</strong></h2>
-      <ul>  
-       <li><i>Italics: </i>  _italics_</li> 
-        <li><b>Bold: </b> *Bold*</li> 
-         <li><i><b>Bold-Italics: </b><i/> *_bold-italics_* </li> 
-       </ul>
+ <ul>  
+  <li><i>Italics:  </i>  _italics_</li> 
+   <li><b>Bold:  </b> *Bold*</li> 
+   <li><strike>Strikethrough:  </strike> ~strikethrough~</li>
+   <li><u>Underline:  </u> -underline-</li>
+   <li><code>Code:  </code> &#39;code&#39;</li> 
+  </ul>
+
     <div id="chat">
       <ul>
     <%
       for (Message message : messages) {
         String author = UserStore.getInstance()
           .getUser(message.getAuthorId()).getName();
+          if (message.getContent() == null)
+            continue; // do not display empty messages for now
           String parsedContent = messageParser.parse(message.getContent());
     %>
       <li><strong><%= author %>:</strong> <%= parsedContent %></li>
@@ -90,18 +96,43 @@ StylizedTextParser messageParser = new StylizedTextParser();
       </ul>
     </div>
     <hr/>
+    
     <% if (request.getSession().getAttribute("user") != null) { %>
     <form action="/chat/<%= conversation.getTitle() %>" method="POST">
         <input type="text" name="message">
         <br/>
         <button type="submit">Send</button>
     </form>
+    <% if (conversation.getType().equals("private")) { %>
+    <hr/>
+    <h2 style="color:purple">Plan a Surprise</h2>
+    <p><i>Surprise a friend by adding them to this conversation to join the fun!</i></p>
+    <form action="/chat/<%= conversation.getTitle() %>" method="POST">
+      <div class="form-group">
+            <label class="form-control-label">Username:</label>
+          <input type="text" name="username">
+        </div>
+        <button type="submit">Schedule</button>
+    </form>
+    <hr/>
+    <% if (usernames != null) { %>
+    <h2>Chat Members</h2>
+    <ul>
+      <% for (String username : usernames) { %>
+      <li><%= username %></li>
+      <% 
+      } 
+      %>
+    </ul>
+      <% 
+      } 
+      %>
+    <% } %>
     <% } else { %>
       <p><a href="/login">Login</a> to send a message.</p>
     <% } %>
 
     <hr/>
-
   </div>
 
 </body>

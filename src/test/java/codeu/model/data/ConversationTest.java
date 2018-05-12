@@ -34,5 +34,52 @@ public class ConversationTest {
     Assert.assertEquals(owner, conversation.getOwnerId());
     Assert.assertEquals(title, conversation.getTitle());
     Assert.assertEquals(creation, conversation.getCreationTime());
+    Assert.assertEquals("public", conversation.getType()); 
+  }
+
+  @Test
+  public void testCreatePrivate() {
+    UUID id = UUID.randomUUID();
+    UUID owner = UUID.randomUUID();
+    String title = "Test_Title";
+    Instant creation = Instant.now();
+    String type = "private"; 
+
+    Conversation conversation = new Conversation(id, owner, title, creation, type);
+
+    Assert.assertEquals(id, conversation.getId());
+    Assert.assertEquals(owner, conversation.getOwnerId());
+    Assert.assertEquals(title, conversation.getTitle());
+    Assert.assertEquals(creation, conversation.getCreationTime());
+    Assert.assertEquals(type, conversation.getType()); 
+    Assert.assertEquals(true, conversation.isAdmin(owner));
+  }
+
+  @Test
+  public void testAddUsers() {
+    UUID id = UUID.randomUUID();
+    UUID owner = UUID.randomUUID();
+    String title = "Test_Title";
+    Instant creation = Instant.now();
+    String type = "private"; 
+    UUID idOne = UUID.randomUUID(); 
+    UUID idTwo = UUID.randomUUID(); 
+    UUID idAdmin = UUID.randomUUID(); 
+
+    Conversation conversation = new Conversation(id, owner, title, creation, type);
+    conversation.addUser(idOne); 
+    conversation.addAdmin(idAdmin); 
+
+    Assert.assertEquals(id, conversation.getId());
+    Assert.assertEquals(owner, conversation.getOwnerId());
+    Assert.assertEquals(title, conversation.getTitle());
+    Assert.assertEquals(creation, conversation.getCreationTime());
+    Assert.assertEquals(type, conversation.getType()); 
+
+    Assert.assertEquals(true, conversation.isAdmin(owner)); 
+    Assert.assertEquals(true, conversation.isAllowedUser(idOne));
+    Assert.assertEquals(false, conversation.isAllowedUser(idTwo));  
+    Assert.assertEquals(true, conversation.isAdmin(idAdmin));
+    Assert.assertEquals(false, conversation.isAdmin(idOne));
   }
 }

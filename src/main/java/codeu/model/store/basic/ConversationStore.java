@@ -18,7 +18,9 @@ import codeu.model.data.Conversation;
 import codeu.model.store.persistence.PersistentStorageAgent;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID; 
 
+import com.google.appengine.api.datastore.EntityNotFoundException;
 /**
  * Store class that uses in-memory data structures to hold values and automatically loads from and
  * saves to PersistentStorageAgent. It's a singleton so all servlet classes can access the same
@@ -86,6 +88,28 @@ public class ConversationStore {
     return conversations;
   }
 
+  /** Access the current set of public conversations known to the application. */
+  public List<Conversation> getPublicConversations() {
+    List<Conversation> publicConversations = new ArrayList<Conversation>(); 
+    for (Conversation conversation : conversations) {
+      if (conversation.getType().equals("public")) {
+        publicConversations.add(conversation); 
+      }
+    }
+    return publicConversations; 
+  }
+
+  /** Access the current set of private conversations known to the application. */
+  public List<Conversation> getPrivateConversations() {
+    List<Conversation> privateConversations = new ArrayList<Conversation>(); 
+    for (Conversation conversation : conversations) {
+      if (conversation.getType().equals("private")) {
+        privateConversations.add(conversation); 
+      }
+    }
+    return privateConversations; 
+  }
+
   /** Add a new conversation to the current set of conversations known to the application. */
   public void addConversation(Conversation conversation) {
     conversations.add(conversation);
@@ -116,5 +140,11 @@ public class ConversationStore {
   /** Sets the List of Conversations stored by this ConversationStore. */
   public void setConversations(List<Conversation> conversations) {
     this.conversations = conversations;
+  }
+
+  /* Updates allowedUsers of conversation */
+  public void updateAllowedUsers(Conversation conversation, UUID id) throws EntityNotFoundException {
+    conversation.addUser(id); 
+    persistentStorageAgent.updateConversation(conversation, id); 
   }
 }

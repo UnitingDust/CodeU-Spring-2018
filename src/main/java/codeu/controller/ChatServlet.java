@@ -23,15 +23,15 @@ import codeu.model.store.basic.UserStore;
 import java.io.IOException;
 import java.time.Instant;
 import java.util.List;
+import java.util.HashMap; 
+import java.util.ArrayList; 
 import java.util.UUID;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import org.jsoup.Jsoup;
-import org.jsoup.safety.Whitelist;
-import  codeu.controller.StylizedTextParser;
 
+import com.google.appengine.api.datastore.EntityNotFoundException;
 
 /** Servlet class responsible for the chat page. */
 public class ChatServlet extends HttpServlet {
@@ -101,8 +101,19 @@ public class ChatServlet extends HttpServlet {
 
     List<Message> messages = messageStore.getMessagesInConversation(conversationId);
 
+    HashMap<UUID, Boolean> allowedUsers = conversation.getAllowedUsers(); 
+    List<String> allowedUsernames = new ArrayList<String>(); 
+    if (conversation.getType().equals("private")) {
+      for (UUID id : allowedUsers.keySet()) {
+        allowedUsernames.add(userStore.getUser(id).getName()); 
+      }
+    }
+    else
+      allowedUsernames = null; 
+
     request.setAttribute("conversation", conversation);
     request.setAttribute("messages", messages);
+    request.setAttribute("usernames", allowedUsernames); 
     request.getRequestDispatcher("/WEB-INF/view/chat.jsp").forward(request, response);
   }
 
@@ -141,9 +152,60 @@ public class ChatServlet extends HttpServlet {
     }
 
     String messageContent = request.getParameter("message");
-    // String cleanedMessageContent = Jsoup.clean(messageContent, Whitelist.basic());   
-    // StylizedTextParser messageParser = new StylizedTextParser(); 
-    // String parsedContent = messageParser.parse(cleanedMessageContent);
+
+    // empty message, so post request came from Surprise submit button 
+    if (messageContent == null) {
+      if (!conversation.isAdmin(user.getId())) {
+        // user is not an admin, so cannot add other users 
+        request.setAttribute("error", "Cannot access admin privileges of this chat"); 
+        //request.getRequestDispatcher("/WEB-INF/view/chat.jsp").forward(request, response); - TODO: forward request to show error message
+        response.sendRedirect("/chat/" + conversationTitle);
+        return; 
+      }
+      
+      String surprisedUsername = request.getParameter("username");  
+      if (surprisedUsername == null || surprisedUsername.length() == 0) {
+        // nothing entered
+        response.sendRedirect("/chat/" + conversationTitle); 
+        return; 
+      }
+
+      User surprisedUser = userStore.getUser(surprisedUsername); 
+      System.out.println(surprisedUser); 
+      if (surprisedUser == null) {
+        // user not found 
+        response.sendRedirect("/chat/" + conversationTitle); 
+        return; 
+      }
+
+      System.out.println("id " +  surprisedUser.getId()); 
+      System.out.println(" user id " + user.getId()); 
+      if (surprisedUser.getId().equals(user.getId())) {
+        // user cannot add himself to the chat 
+        response.sendRedirect("/chat/" + conversationTitle); 
+        return; 
+      }
+
+      HashMap<UUID, Boolean> allowedUsers = conversation.getAllowedUsers(); 
+      for (UUID id : allowedUsers.keySet()) {
+        if (surprisedUser.getId().equals(id)) {
+          // user cannot re-add a current member of that chat
+          response.sendRedirect("/chat/" + conversationTitle); 
+          return; 
+        }
+      }
+
+      try {
+        conversationStore.updateAllowedUsers(conversation, surprisedUser.getId());
+      }
+      catch (EntityNotFoundException e) {
+        e.printStackTrace();
+      }
+
+      //surprisedUser.makeNotification("Surprise!", "Welcome to " + conversationTitle);  
+      //request.setAttribute("message", "Surprise for "  + username + " scheduled for " + Calendar); 
+      response.sendRedirect("/chat/" + conversationTitle);
+    }
     
     //creates the new message
     Message message =

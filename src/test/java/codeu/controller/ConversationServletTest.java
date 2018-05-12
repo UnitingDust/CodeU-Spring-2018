@@ -18,6 +18,8 @@ import codeu.model.data.Conversation;
 import codeu.model.data.User;
 import codeu.model.store.basic.ConversationStore;
 import codeu.model.store.basic.UserStore;
+import jdk.internal.jline.internal.TestAccessible;
+
 import java.io.IOException;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -43,6 +45,7 @@ public class ConversationServletTest {
   private RequestDispatcher mockRequestDispatcher;
   private ConversationStore mockConversationStore;
   private UserStore mockUserStore;
+  private User mockUser; 
 
   @Before
   public void setup() {
@@ -67,13 +70,19 @@ public class ConversationServletTest {
   @Test
   public void testDoGet() throws IOException, ServletException {
     List<Conversation> fakeConversationList = new ArrayList<>();
+    List<Conversation> fakePrivateConversationList = new ArrayList<>(); 
+    List<Conversation> allowedConversationList = new ArrayList<>(); 
+
     fakeConversationList.add(
         new Conversation(UUID.randomUUID(), UUID.randomUUID(), "test_conversation", Instant.now()));
-    Mockito.when(mockConversationStore.getAllConversations()).thenReturn(fakeConversationList);
+    fakePrivateConversationList.add(new Conversation(UUID.randomUUID(), UUID.randomUUID(), "test_conversation", Instant.now(), "private"));
 
+    Mockito.when(mockConversationStore.getPublicConversations()).thenReturn(fakeConversationList);
+    Mockito.when(mockConversationStore.getPrivateConversations()).thenReturn(fakePrivateConversationList);
     conversationServlet.doGet(mockRequest, mockResponse);
 
-    Mockito.verify(mockRequest).setAttribute("conversations", fakeConversationList);
+    Mockito.verify(mockRequest).setAttribute("public-conversations", fakeConversationList);
+    Mockito.verify(mockRequest).setAttribute("private-conversations", allowedConversationList); // should not be viewable to public
     Mockito.verify(mockRequestDispatcher).forward(mockRequest, mockResponse);
   }
 
@@ -103,6 +112,7 @@ public class ConversationServletTest {
   @Test
   public void testDoPost_BadConversationName() throws IOException, ServletException {
     Mockito.when(mockRequest.getParameter("conversationTitle")).thenReturn("bad !@#$% name");
+    Mockito.when(mockRequest.getParameter("conversationType")).thenReturn("public");
     Mockito.when(mockSession.getAttribute("user")).thenReturn("test_username");
 
     User fakeUser = new User(UUID.randomUUID(), "test_username", "test_password", Instant.now());
@@ -119,6 +129,7 @@ public class ConversationServletTest {
   @Test
   public void testDoPost_ConversationNameTaken() throws IOException, ServletException {
     Mockito.when(mockRequest.getParameter("conversationTitle")).thenReturn("test_conversation");
+    Mockito.when(mockRequest.getParameter("conversationType")).thenReturn("public");
     Mockito.when(mockSession.getAttribute("user")).thenReturn("test_username");
 
     User fakeUser = new User(UUID.randomUUID(), "test_username", "test_password", Instant.now());
@@ -137,6 +148,7 @@ public class ConversationServletTest {
   public void testDoPost_NewConversation() throws IOException, ServletException {
     Mockito.when(mockRequest.getParameter("conversationTitle")).thenReturn("test_conversation");
     Mockito.when(mockSession.getAttribute("user")).thenReturn("test_username");
+    Mockito.when(mockRequest.getParameter("conversationType")).thenReturn("public");
 
     User fakeUser = new User(UUID.randomUUID(), "test_username", "test_password", Instant.now());
     Mockito.when(mockUserStore.getUser("test_username")).thenReturn(fakeUser);
@@ -151,5 +163,22 @@ public class ConversationServletTest {
     Assert.assertEquals(conversationArgumentCaptor.getValue().getTitle(), "test_conversation");
 
     Mockito.verify(mockResponse).sendRedirect("/chat/test_conversation");
+  }
+
+  @Test
+  public void testDoPost_NoConversationType() throws IOException, ServletException {
+    Mockito.when(mockRequest.getParameter("conversationTitle")).thenReturn("test_name");
+    Mockito.when(mockRequest.getParameter("conversationType")).thenReturn(null);
+    Mockito.when(mockSession.getAttribute("user")).thenReturn("test_username");
+
+    User fakeUser = new User(UUID.randomUUID(), "test_username", "test_password", Instant.now());
+    Mockito.when(mockUserStore.getUser("test_username")).thenReturn(fakeUser);
+
+    conversationServlet.doPost(mockRequest, mockResponse);
+
+    Mockito.verify(mockConversationStore, Mockito.never())
+        .addConversation(Mockito.any(Conversation.class));
+    Mockito.verify(mockRequest).setAttribute("error", "Please specify conversation type.");
+    Mockito.verify(mockRequestDispatcher).forward(mockRequest, mockResponse); 
   }
 }

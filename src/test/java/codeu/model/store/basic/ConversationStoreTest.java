@@ -72,11 +72,32 @@ public class ConversationStoreTest {
     Mockito.verify(mockPersistentStorageAgent).writeThrough(inputConversation);
   }
 
+  @Test
+  public void testAddPrivateConversation() {
+    Conversation inputConversation =
+        new Conversation(UUID.randomUUID(), UUID.randomUUID(), "test_conversation", Instant.now(), "private");
+
+    conversationStore.addConversation(inputConversation);
+    Conversation resultConversation =
+        conversationStore.getConversationWithTitle("test_conversation");
+
+    assertEquals(inputConversation, resultConversation);
+    Mockito.verify(mockPersistentStorageAgent).writeThrough(inputConversation);
+  }
+
   private void assertEquals(Conversation expectedConversation, Conversation actualConversation) {
     Assert.assertEquals(expectedConversation.getId(), actualConversation.getId());
     Assert.assertEquals(expectedConversation.getOwnerId(), actualConversation.getOwnerId());
     Assert.assertEquals(expectedConversation.getTitle(), actualConversation.getTitle());
     Assert.assertEquals(
         expectedConversation.getCreationTime(), actualConversation.getCreationTime());
+    Assert.assertEquals(
+      expectedConversation.getType(), actualConversation.getType());
+    if (expectedConversation.getType().equals("private")) {
+      for (UUID id : expectedConversation.getAllowedUsers().keySet()) {
+        assert(expectedConversation.isAllowedUser(id) == actualConversation.isAllowedUser(id)); 
+        assert(expectedConversation.isAdmin(id) == actualConversation.isAdmin(id)); 
+      }
+    }
   }
 }
