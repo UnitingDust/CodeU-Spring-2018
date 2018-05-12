@@ -21,6 +21,7 @@ import codeu.model.data.Profile;
 import codeu.model.data.User;
 import codeu.model.store.persistence.PersistentDataStore;
 import java.util.List;
+import java.util.UUID; 
 
 import com.google.appengine.api.datastore.EntityNotFoundException;
 
@@ -108,12 +109,17 @@ public class PersistentStorageAgent {
     persistentDataStore.writeThrough(user);
   }
 
-  /** Write a Message object to the Datastore service. */
+  /** Write a Conversation object to the Datastore service. */
   public void writeThrough(Conversation conversation) {
     persistentDataStore.writeThrough(conversation);
   }
 
-  /** Write a Conversation object to the Datastore service. */
+  /** Update a Conversation object to the Datastore service. */
+  public void updateConversation(Conversation conversation, UUID id) throws EntityNotFoundException {
+    persistentDataStore.updateConversation(conversation, id);
+  }
+
+  /** Write a Message object to the Datastore service. */
   public void writeThrough(Message message) {
     persistentDataStore.writeThrough(message);
   }

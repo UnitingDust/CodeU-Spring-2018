@@ -103,7 +103,8 @@ public class PersistentDataStoreTest {
 
     // load
     List<Conversation> resultConversations = persistentDataStore.loadConversations();
-
+    System.out.println(" FINISHED LOADING ALL CONVERSATIONS"); 
+    System.out.println(resultConversations); 
     // confirm that what we saved matches what we loaded
     Conversation resultConversationOne = resultConversations.get(0);
     Assert.assertEquals(idOne, resultConversationOne.getId());

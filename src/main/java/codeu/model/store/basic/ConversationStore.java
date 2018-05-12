@@ -18,7 +18,9 @@ import codeu.model.data.Conversation;
 import codeu.model.store.persistence.PersistentStorageAgent;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID; 
 
+import com.google.appengine.api.datastore.EntityNotFoundException;
 /**
  * Store class that uses in-memory data structures to hold values and automatically loads from and
  * saves to PersistentStorageAgent. It's a singleton so all servlet classes can access the same
@@ -138,5 +140,11 @@ public class ConversationStore {
   /** Sets the List of Conversations stored by this ConversationStore. */
   public void setConversations(List<Conversation> conversations) {
     this.conversations = conversations;
+  }
+
+  /* Updates allowedUsers of conversation */
+  public void updateAllowedUsers(Conversation conversation, UUID id) throws EntityNotFoundException {
+    conversation.addUser(id); 
+    persistentStorageAgent.updateConversation(conversation, id); 
   }
 }

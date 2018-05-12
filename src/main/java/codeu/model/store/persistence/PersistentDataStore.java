@@ -100,7 +100,7 @@ public class PersistentDataStore {
     List<Conversation> conversations = new ArrayList<>();
 
     // Retrieve all conversations from the datastore.
-    Query query = new Query("chat-conversations");
+    Query query = new Query("chat-conversations").addSort("title");;
     PreparedQuery results = datastore.prepare(query);
 
     for (Entity entity : results.asIterable()) {
@@ -111,7 +111,6 @@ public class PersistentDataStore {
         Instant creationTime = Instant.parse((String) entity.getProperty("creation_time"));
         String conversationType = (String) entity.getProperty("conversationType"); 
         Conversation conversation = new Conversation(uuid, ownerUuid, title, creationTime, conversationType);
-
         // load allowed users from embedded entity 
         EmbeddedEntity ee = (EmbeddedEntity) entity.getProperty("allowedUsers");  
         if (ee != null) {
@@ -225,13 +224,12 @@ public class PersistentDataStore {
 
   /** Write a Conversation object to the Datastore service. */
   public void writeThrough(Conversation conversation) {
-    Entity conversationEntity = new Entity("chat-conversations");
+    Entity conversationEntity = new Entity("chat-conversations", conversation.getId().toString());
     conversationEntity.setProperty("uuid", conversation.getId().toString());
     conversationEntity.setProperty("owner_uuid", conversation.getOwnerId().toString());
     conversationEntity.setProperty("title", conversation.getTitle());
     conversationEntity.setProperty("creation_time", conversation.getCreationTime().toString());
     conversationEntity.setProperty("conversationType", conversation.getType()); 
-
     HashMap<UUID, Boolean> allowedUsers = conversation.getAllowedUsers(); 
     EmbeddedEntity ee; 
     if (allowedUsers != null) {
@@ -245,6 +243,19 @@ public class PersistentDataStore {
     conversationEntity.setProperty("allowedUsers", ee); 
 
     datastore.put(conversationEntity);
+  }
+
+  /** Update a Conversation object in the Datastore service **/
+  public void updateConversation(Conversation conversation, UUID id) throws EntityNotFoundException {
+    Key key = KeyFactory.createKey("chat-conversations", conversation.getId().toString());
+    
+    Entity conversationEntity = datastore.get(key);
+    HashMap<UUID, Boolean> allowedUsers = conversation.getAllowedUsers();
+    EmbeddedEntity ee = (EmbeddedEntity) conversationEntity.getProperty("allowedUsers"); 
+    ee.setProperty(id.toString(), allowedUsers.get(id));  
+    conversationEntity.setProperty("allowedUsers", ee); 
+
+    datastore.put(conversationEntity); 
   }
   
   /** Write a Profile object to the Datastore service. */

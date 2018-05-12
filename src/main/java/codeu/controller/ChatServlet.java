@@ -31,7 +31,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-
+import com.google.appengine.api.datastore.EntityNotFoundException;
 
 /** Servlet class responsible for the chat page. */
 public class ChatServlet extends HttpServlet {
@@ -160,23 +160,30 @@ public class ChatServlet extends HttpServlet {
         request.setAttribute("error", "Cannot access admin privileges of this chat"); 
         //request.getRequestDispatcher("/WEB-INF/view/chat.jsp").forward(request, response); - TODO: forward request to show error message
         response.sendRedirect("/chat/" + conversationTitle);
+        return; 
       }
       
-      String surprisedUsername = request.getParameter("username"); 
-      if (surprisedUsername == null) {
+      String surprisedUsername = request.getParameter("username");  
+      if (surprisedUsername == null || surprisedUsername.length() == 0) {
         // nothing entered
         response.sendRedirect("/chat/" + conversationTitle); 
+        return; 
       }
 
       User surprisedUser = userStore.getUser(surprisedUsername); 
+      System.out.println(surprisedUser); 
       if (surprisedUser == null) {
         // user not found 
         response.sendRedirect("/chat/" + conversationTitle); 
+        return; 
       }
 
+      System.out.println("id " +  surprisedUser.getId()); 
+      System.out.println(" user id " + user.getId()); 
       if (surprisedUser.getId().equals(user.getId())) {
         // user cannot add himself to the chat 
         response.sendRedirect("/chat/" + conversationTitle); 
+        return; 
       }
 
       HashMap<UUID, Boolean> allowedUsers = conversation.getAllowedUsers(); 
@@ -184,11 +191,17 @@ public class ChatServlet extends HttpServlet {
         if (surprisedUser.getId().equals(id)) {
           // user cannot re-add a current member of that chat
           response.sendRedirect("/chat/" + conversationTitle); 
+          return; 
         }
       }
 
-      System.out.println("adding surprise for user " + surprisedUser.getId()); 
-      conversation.addUser(surprisedUser.getId());
+      try {
+        conversationStore.updateAllowedUsers(conversation, surprisedUser.getId());
+      }
+      catch (EntityNotFoundException e) {
+        e.printStackTrace();
+      }
+
       //surprisedUser.makeNotification("Surprise!", "Welcome to " + conversationTitle);  
       //request.setAttribute("message", "Surprise for "  + username + " scheduled for " + Calendar); 
       response.sendRedirect("/chat/" + conversationTitle);
