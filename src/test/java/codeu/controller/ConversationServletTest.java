@@ -45,6 +45,7 @@ public class ConversationServletTest {
   private RequestDispatcher mockRequestDispatcher;
   private ConversationStore mockConversationStore;
   private UserStore mockUserStore;
+  private User mockUser; 
 
   @Before
   public void setup() {
@@ -70,17 +71,18 @@ public class ConversationServletTest {
   public void testDoGet() throws IOException, ServletException {
     List<Conversation> fakeConversationList = new ArrayList<>();
     List<Conversation> fakePrivateConversationList = new ArrayList<>(); 
+    List<Conversation> allowedConversationList = new ArrayList<>(); 
+
     fakeConversationList.add(
         new Conversation(UUID.randomUUID(), UUID.randomUUID(), "test_conversation", Instant.now()));
-    fakePrivateConversationList.add(
-      new Conversation(UUID.randomUUID(), UUID.randomUUID(), "test_conversation", Instant.now(), "private"));
+    fakePrivateConversationList.add(new Conversation(UUID.randomUUID(), UUID.randomUUID(), "test_conversation", Instant.now(), "private"));
+
     Mockito.when(mockConversationStore.getPublicConversations()).thenReturn(fakeConversationList);
     Mockito.when(mockConversationStore.getPrivateConversations()).thenReturn(fakePrivateConversationList);
-
     conversationServlet.doGet(mockRequest, mockResponse);
 
     Mockito.verify(mockRequest).setAttribute("public-conversations", fakeConversationList);
-    Mockito.verify(mockRequest).setAttribute("private-conversations", fakePrivateConversationList);
+    Mockito.verify(mockRequest).setAttribute("private-conversations", allowedConversationList); // should not be viewable to public
     Mockito.verify(mockRequestDispatcher).forward(mockRequest, mockResponse);
   }
 

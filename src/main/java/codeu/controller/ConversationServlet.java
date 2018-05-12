@@ -21,6 +21,7 @@ import codeu.model.store.basic.UserStore;
 import java.io.IOException;
 import java.time.Instant;
 import java.util.List;
+import java.util.ArrayList; 
 import java.util.UUID;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -72,8 +73,22 @@ public class ConversationServlet extends HttpServlet {
       throws IOException, ServletException {
     List<Conversation> publicConversations = conversationStore.getPublicConversations();
     request.setAttribute("public-conversations", publicConversations);
+
+    // only send conversations accessible to current user
     List<Conversation> privateConversations = conversationStore.getPrivateConversations(); 
-    request.setAttribute("private-conversations", privateConversations); 
+    List<Conversation> allowedConversations = new ArrayList<Conversation>(); 
+    String username = (String) request.getSession().getAttribute("user");
+    if (username != null) {
+      User user = userStore.getUser(username);
+      if (user != null) {
+        UUID userID = user.getId(); 
+        for (Conversation c : privateConversations) {
+          if (c.isAllowedUser(userID))
+            allowedConversations.add(c); 
+        }
+      }
+    }
+    request.setAttribute("private-conversations", allowedConversations); 
     request.getRequestDispatcher("/WEB-INF/view/conversations.jsp").forward(request, response);
   }
 

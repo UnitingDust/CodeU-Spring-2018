@@ -35,6 +35,10 @@ public class StylizedTextParser {
         /* marks potential beginning of stylized text */
         Stack<Character> styleMarker = new Stack<Character>(); 
 
+        // return empty string if null message is passed in 
+        if (markdownMessage == null) 
+            return ""; 
+
         for (int i = 0; i < markdownMessage.length(); i++) {
             char currChar = markdownMessage.charAt(i); 
             if (MarkdownHTMLMapping.containsKey(currChar)) {
