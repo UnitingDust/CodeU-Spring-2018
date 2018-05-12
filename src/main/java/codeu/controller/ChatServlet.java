@@ -30,12 +30,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-<<<<<<< HEAD
-=======
-import org.jsoup.Jsoup;
-import org.jsoup.safety.Whitelist;
-import  codeu.controller.StylizedTextParser;
->>>>>>> 224ed659d1609cbc37500138b00bedfd4ff2b5d8
 
 import com.google.appengine.api.datastore.EntityNotFoundException;
 
