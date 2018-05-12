@@ -139,4 +139,18 @@ public class ProfileServletTest {
 
     Mockito.verify(mockResponse).sendRedirect("/profile/test_username");
   }
+
+  @Test
+  public void notification(){
+   User testUser = new User(UUID.randomUUID(), "test_username", "test_password", Instant.now());
+   testUser.setNotificationTrue();
+   Notification testN =  testUser.makeNotification("testTitle", "testMessage");
+   System.out.println("this is the notif titile: " + testN.getTitle());
+   System.out.println("this is the notif message: " + testN.getMessage() );
+   System.out.println("this is the notif user: " + testN.getUser().getName() );
+   Assert.assertEquals("test_username",testN.getUser().getName());
+   Assert.assertEquals("testTitle",testN.getTitle());
+   Assert.assertEquals("testMessage",testN.getMessage());
+ }
+ 
 }
