@@ -28,7 +28,7 @@ StylizedTextParser messageParser = new StylizedTextParser();
   <link rel="stylesheet" href="/css/main.css" type="text/css">
 
   <style>
-    #chat {
+    #chat { 
       background-color: white;
       height: 500px;
       overflow-y: scroll
