@@ -87,6 +87,7 @@ user.makeNotification("test", "hello user");
    <a href="/about.jsp">About</a>
    <% if(request.getSession().getAttribute("user") != null){ %>
    <a href="/profile/<%= request.getSession().getAttribute("user") %>">Profile</a>
+   <a href="/logout.jsp">Logout</a>
    <% } %>
  </nav>
  <div class="sidenav">
