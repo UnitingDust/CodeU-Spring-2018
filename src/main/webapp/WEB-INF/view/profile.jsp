@@ -20,10 +20,12 @@ user.makeNotification("test", "hello user");
 
 <head>
 	<title>Profile</title>
-	<link rel="stylesheet" href="/css/main.css" type="text/css">
+  <link href="https://fonts.googleapis.com/css?family=Oxygen|Pacifico" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
 	<style>		
   #chat {
    background-color: white;
+   color: black;
    height: 200px;
    overflow-y: scroll
  }
@@ -47,10 +49,11 @@ user.makeNotification("test", "hello user");
   position: fixed;
   z-index: 1;
   top: 100px;
-  left: 10px;
+  right: 10px;
   background-color: #eee;
   overflow-x: hidden;
   padding: 8px 0;
+  text-align: center;
 }
 
 .sidenav a {
@@ -76,7 +79,7 @@ user.makeNotification("test", "hello user");
 <body>
 
  <nav>
-   <a id="navTitle" href="/">CodeU Chat App</a>
+   <a id="navTitle" href="/">Gossip Guru</a>
    <a href="/conversations">Conversations</a>
    <% if(request.getSession().getAttribute("user") != null){ %>
    <a>Hello <%= request.getSession().getAttribute("user") %>!</a>

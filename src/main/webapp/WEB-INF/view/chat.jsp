@@ -26,8 +26,8 @@ StylizedTextParser messageParser = new StylizedTextParser();
 <html>
 <head>
   <title><%= conversation.getTitle() %></title>
-  <link rel="stylesheet" href="/css/main.css" type="text/css">
-
+  <link href="https://fonts.googleapis.com/css?family=Oxygen|Pacifico" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
   <style>
     #chat {
       background-color: white;
@@ -47,7 +47,7 @@ StylizedTextParser messageParser = new StylizedTextParser();
 <body onload="scrollChat()">
 
   <nav>
-   <a id="navTitle" href="/">CodeU Chat App</a>
+   <a id="navTitle" href="/">Gossip Guru</a>
    <a href="/conversations">Conversations</a>
    <% if(request.getSession().getAttribute("user") != null){ %>
      <a>Hello <%= request.getSession().getAttribute("user") %>!</a>
@@ -106,7 +106,7 @@ StylizedTextParser messageParser = new StylizedTextParser();
     </form>
     <% if (conversation.getType().equals("private")) { %>
     <hr/>
-    <h2 style="color:purple">Plan a Surprise</h2>
+    <h2 style="color:purple; font-weight: bold">Plan a Surprise</h2>
     <p><i>Surprise a friend by adding them to this conversation to join the fun!</i></p>
     <form action="/chat/<%= conversation.getTitle() %>" method="POST">
       <div class="form-group">
@@ -117,7 +117,7 @@ StylizedTextParser messageParser = new StylizedTextParser();
     </form>
     <hr/>
     <% if (usernames != null) { %>
-    <h2>Chat Members</h2>
+    <h2 style="font-weight: bold">Chat Members</h2>
     <ul>
       <% for (String username : usernames) { %>
       <li><%= username %></li>

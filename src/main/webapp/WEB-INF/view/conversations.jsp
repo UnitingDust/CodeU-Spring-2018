@@ -20,12 +20,12 @@
 <html>
 <head>
   <title>Conversations</title>
-  <link rel="stylesheet" href="/css/main.css">
+  <link href="https://fonts.googleapis.com/css?family=Oxygen|Pacifico" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
-
   <nav>
-    <a id="navTitle" href="/">CodeU Chat App</a>
+    <a id="navTitle" href="/">Gossip Guru</a>
    <a href="/conversations">Conversations</a>
    <% if(request.getSession().getAttribute("user") != null){ %>
      <a>Hello <%= request.getSession().getAttribute("user") %>!</a>
@@ -39,13 +39,10 @@
      <a href="/logout.jsp">Logout</a>
    <% } %>
   </nav>
-
   <div id="container">
-
     <% if(request.getAttribute("error") != null){ %>
-        <h2 style="color:red"><%= request.getAttribute("error") %></h2>
+        <h2 style="color:black"><%= request.getAttribute("error") %></h2>
     <% } %>
-
     <% if(request.getSession().getAttribute("user") != null){ %>
       <h1>New Conversation</h1>
       <form action="/conversations" method="POST">
@@ -58,15 +55,12 @@
             <input type="radio" name="conversationType" value="public"> Public
             <input type="radio" name="conversationType" value="private"> Private
         </div>
-
         <button type="submit">Create</button>
       </form>
-
       <hr/>
     <% } %>
       <div style="float:left; width: 50%">
     <h1>Public Conversations</h1>
-
     <%
     List<Conversation> publicConversations =
       (List<Conversation>) request.getAttribute("public-conversations");
@@ -91,11 +85,8 @@
     }
     %>
   </div>
-
   <div style="float: right; width: 50%;">
-
     <h1>Private Conversations</h1>
-
     <%
     List<Conversation> privateConversations =
       (List<Conversation>) request.getAttribute("private-conversations");
