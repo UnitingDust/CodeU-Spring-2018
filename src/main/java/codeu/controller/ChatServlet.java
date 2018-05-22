@@ -207,6 +207,13 @@ public class ChatServlet extends HttpServlet {
       response.sendRedirect("/chat/" + conversationTitle);
     }
     
+    if (messageContent.length() == 0)
+    {
+        response.sendRedirect("/chat/" + conversationTitle);
+        return;
+    }
+        System.out.println("Empty message");
+    
     //creates the new message
     Message message =
         new Message(
