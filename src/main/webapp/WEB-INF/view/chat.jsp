@@ -108,6 +108,11 @@ StylizedTextParser messageParser = new StylizedTextParser();
     <hr/>
     <h2 style="color:purple">Plan a Surprise</h2>
     <p><i>Surprise a friend by adding them to this conversation to join the fun!</i></p>
+    
+    <% if (request.getAttribute("invalid") != null) { %>
+  	<h2 style="color:red"><%= request.getAttribute("invalid") %></h2>
+  	<% } %>
+  	
     <form action="/chat/<%= conversation.getTitle() %>" method="POST">
       <div class="form-group">
             <label class="form-control-label">Username:</label>
