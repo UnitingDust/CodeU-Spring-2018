@@ -23,7 +23,7 @@
   <form class="main-form" action="/login" method="POST">
     <input type="text" name="username" id="username" placeholder="Username">
     <input type="password" name="password" id="password" placeholder="Password">
-    <button type="submit" id="login-button">Login</button>
+    <button type="submit">Login</button>
   </form>
   </div>
   <ul class="bg-bubbles">

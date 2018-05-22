@@ -23,7 +23,7 @@
    <form class="main-form" action="/register" method="POST">
      <input type="text" name="username" id="username" placeholder="Username">
      <input type="password" name="password" id="password" placeholder="Password">
-     <button type="submit">Register</button>
+     <button type="submit" id="login-button">Register</button>
    </form>
  </div>
  <ul class="bg-bubbles">

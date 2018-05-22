@@ -85,7 +85,8 @@ form.main-form {
   position: relative;
   z-index: 2;
 }
-form.main-form input {
+
+form.main-form input, form #input-text {
   -webkit-appearance: none;
      -moz-appearance: none;
           appearance: none;
@@ -103,10 +104,12 @@ form.main-form input {
   transition-duration: 0.25s;
   font-weight: 300;
 }
-form.main-form input:hover {
+
+form.main-form input:hover, form #input-text:hover {
   background-color: rgba(255, 255, 255, 0.4);
 }
-form.main-form input:focus {
+
+form.main-form input:focus, form #input-text:focus {
   background-color: white;
   width: 300px;
   color: #ebb4f7;
@@ -129,7 +132,21 @@ form.main-form button {
   margin: 20px;
 }
 
-form button:hover {
+#submit-button {
+  outline: 0;
+  background-color: white;
+  border: 0;
+  padding: 10px 15px;
+  color: #922bf2;
+  border-radius: 3px;
+  width: 150px;
+  cursor: pointer;
+  font-size: 18px;
+  transition-duration: 0.25s;
+  margin: 20px;
+}
+
+form button:hover, #submit-button:hover {
   background-color: #f5f7f9;
 }
 

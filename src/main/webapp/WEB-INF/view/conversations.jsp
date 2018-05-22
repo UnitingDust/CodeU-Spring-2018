@@ -47,15 +47,14 @@
       <h1>New Conversation</h1>
       <form action="/conversations" method="POST">
           <div class="form-group">
-            <label class="form-control-label">Title:</label>
-          <input type="text" name="conversationTitle">
+          <input id="input-text" type="text" name="conversationTitle" placeholder="Title">
         </div>
         <div class="form-group">
             <label class="form-control-label">Type:</label>
             <input type="radio" name="conversationType" value="public"> Public
             <input type="radio" name="conversationType" value="private"> Private
         </div>
-        <button type="submit">Create</button>
+        <button id="submit-button" type="submit">Create</button>
       </form>
       <hr/>
     <% } %>
