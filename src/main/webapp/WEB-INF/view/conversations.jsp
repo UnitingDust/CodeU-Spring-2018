@@ -47,7 +47,8 @@
       <h1>New Conversation</h1>
       <form action="/conversations" method="POST">
           <div class="form-group">
-          <input id="input-text" type="text" name="conversationTitle" placeholder="Title">
+            <label class="form-control-label">Title:</label>
+          <input id="input-text" type="text" name="conversationTitle">
         </div>
         <div class="form-group">
             <label class="form-control-label">Type:</label>

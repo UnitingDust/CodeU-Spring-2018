@@ -171,7 +171,6 @@ public class ChatServlet extends HttpServlet {
       }
 
       User surprisedUser = userStore.getUser(surprisedUsername); 
-      System.out.println(surprisedUser); 
       if (surprisedUser == null) {
         // user not found 
         response.sendRedirect("/chat/" + conversationTitle); 

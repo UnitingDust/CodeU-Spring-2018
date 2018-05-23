@@ -86,7 +86,7 @@ form.main-form {
   z-index: 2;
 }
 
-form.main-form input, form #input-text {
+form.main-form input, form #input-text, form #input-text-long {
   -webkit-appearance: none;
      -moz-appearance: none;
           appearance: none;
@@ -103,6 +103,26 @@ form.main-form input, form #input-text {
   color: white;
   transition-duration: 0.25s;
   font-weight: 300;
+}
+
+form #input-text {
+  margin: 0 10px 10px 0px;
+  color: #ebb4f7;
+  border: 2px solid rgba(255, 255, 255, 0.6);
+}
+
+form #input-text-long {
+  margin: 0 10px 10px 0px;
+  background-color: rgba(255, 255, 255, 0.4);
+  color: #ebb4f7;
+  border: 2px solid rgba(255, 255, 255, 0.6);
+  width: 90%;
+  text-align: left;
+}
+
+form #input-text-long:hover {
+  width: 100%;
+  background-color: white;
 }
 
 form.main-form input:hover, form #input-text:hover {
@@ -136,14 +156,14 @@ form.main-form button {
   outline: 0;
   background-color: white;
   border: 0;
-  padding: 10px 15px;
+  padding: 8px 8px;
   color: #922bf2;
   border-radius: 3px;
-  width: 150px;
+  width: 130px;
   cursor: pointer;
-  font-size: 18px;
+  font-size: 16px;
   transition-duration: 0.25s;
-  margin: 20px;
+  margin: 10px 10px 10px 10px;
 }
 
 form button:hover, #submit-button:hover {

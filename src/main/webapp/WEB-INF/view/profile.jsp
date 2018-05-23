@@ -125,7 +125,7 @@ user.makeNotification("test", "hello user");
   <form action="/profile/<%= username %>" method="POST">
    <textarea rows="6" cols="90" name="editDescription" placeholder="Limit 250 characters" maxlength="250"></textarea><br>
 
-   <button type="submit">Submit</button>
+   <button id="submit-button" type="submit">Submit</button>
  </form>
  <% } %>
 
