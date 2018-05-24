@@ -17,12 +17,13 @@
 <html>
 <head>
   <title>CodeU Chat App</title>
-  <link rel="stylesheet" href="/css/main.css">
+  <link href="https://fonts.googleapis.com/css?family=Oxygen|Pacifico" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
 
   <nav>
-    <a id="navTitle" href="/">CodeU Chat App</a>
+    <a id="navTitle" href="/">Gossip Guru</a>
    <a href="/conversations">Conversations</a>
    <% if(request.getSession().getAttribute("user") != null){ %>
      <a>Hello <%= request.getSession().getAttribute("user") %>!</a>
@@ -33,6 +34,7 @@
    <a href="/about.jsp">About</a>
    <% if(request.getSession().getAttribute("user") != null){ %>
      <a href="/profile/<%= request.getSession().getAttribute("user") %>">Profile</a>
+     <a href="/logout.jsp">Logout</a>
    <% } %>
   </nav>
 

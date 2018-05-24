@@ -2,7 +2,8 @@
 <html>
 <head>
  <title>Login</title>
- <link rel="stylesheet" href="/css/main.css">
+ <link href="https://fonts.googleapis.com/css?family=Oxygen|Pacifico" rel="stylesheet">
+ <link rel="stylesheet" href="/css/style.css">
  <style>
    label {
      display: inline-block;
@@ -11,35 +12,32 @@
  </style>
 </head>
 <body>
-
- <nav>
-   <a id="navTitle" href="/">CodeU Chat App</a>
-   <a href="/conversations">Conversations</a>
-   <% if(request.getSession().getAttribute("user") != null){ %>
-     <a>Hello <%= request.getSession().getAttribute("user") %>!</a>
-   <% } else{ %>
-     <a href="/login">Login</a>
-     <a href="/register">Register</a>
-   <% } %>
-   <a href="/about.jsp">About</a>
- </nav>
-
- <div id="container">
-   <h1>Login</h1>
-
-   <% if(request.getAttribute("error") != null){ %>
-       <h2 style="color:red"><%= request.getAttribute("error") %></h2>
-   <% } %>
-
-   <form action="/login" method="POST">
-     <label for="username">Username: </label>
-     <input type="text" name="username" id="username">
-     <br/>
-     <label for="password">Password: </label>
-     <input type="password" name="password" id="password">
-     <br/><br/>
-     <button type="submit">Login</button>
-   </form>
+ <div class="wrapper">
+  <div class="main-container">
+  <br><br>
+  <h1>Welcome Back</h1>
+  <br><br>
+  <% if(request.getAttribute("error") != null){ %>
+     <h2 style="color:black"><%= request.getAttribute("error") %></h2>
+  <% } %>
+  <form class="main-form" action="/login" method="POST">
+    <input type="text" name="username" id="username" placeholder="Username">
+    <input type="password" name="password" id="password" placeholder="Password">
+    <button type="submit">Login</button>
+  </form>
+  </div>
+  <ul class="bg-bubbles">
+  <li></li>
+  <li></li>
+  <li></li>
+  <li></li>
+  <li></li>
+  <li></li>
+  <li></li>
+  <li></li>
+  <li></li>
+  <li></li>
+  </ul>
  </div>
 </body>
 </html>

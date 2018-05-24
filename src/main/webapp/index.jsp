@@ -17,39 +17,34 @@
 <html>
 <head>
   <title>CodeU Team 32 Chat App</title>
-  <link rel="stylesheet" href="/css/main.css">
+  <link href="https://fonts.googleapis.com/css?family=Oxygen|Pacifico" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
 
-  <nav>
-    <a id="navTitle" href="/">CodeU Chat App</a>
-   <a href="/conversations">Conversations</a>
-   <% if(request.getSession().getAttribute("user") != null){ %>
-     <a>Hello <%= request.getSession().getAttribute("user") %>!</a>
-   <% } else{ %>
-     <a href="/login">Login</a>
-     <a href="/register">Register</a>
-   <% } %>
-   <a href="/about.jsp">About</a>
-  </nav>
-
-  <div id="container">
-    <div
-      style="width:75%; margin-left:auto; margin-right:auto; margin-top: 50px;">
-
-      <h1>CodeU Chat App</h1>
-      <h2>Welcome!</h2>
-
-      <ul>
-        <li><a href="/login">Login</a> to get started.</li>
-        <li>Go to the <a href="/conversations">conversations</a> page to
-            create or join a conversation.</li>
-        <li>View the <a href="/about.jsp">about</a> page to learn more about the
-            project.</li>
-        <li>You can <a href="/testdata">load test data</a> to fill the site with
-            example data.</li>
-      </ul>
+  <div class="wrapper">
+    <div class="main-container">
+      <br><br><br>
+      <h1 id="main-icon">Gossip Guru</h1>
+      <br><br>
+      <form class="main-form">
+      <input type="button" value="Returning Member" onclick="window.location.href='/login'"></input>
+      <br>
+      <input type="button" value="New Member" onclick="window.location.href='/register'"></input>
+      </form>
     </div>
+    <ul class="bg-bubbles">
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    </ul>
   </div>
 </body>
 </html>

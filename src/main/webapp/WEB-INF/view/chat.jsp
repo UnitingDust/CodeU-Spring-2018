@@ -10,7 +10,10 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 --%>
+<%@ page import="java.util.ArrayList" %>
 <%@ page import="java.util.List" %>
+<%@ page import="java.util.HashMap" %>
+<%@ page import="java.util.UUID" %>
 <%@ page import="codeu.model.data.Conversation" %>
 <%@ page import="codeu.model.data.Message" %>
 <%@ page import="codeu.model.store.basic.UserStore" %>
@@ -18,7 +21,12 @@
 <%
 Conversation conversation = (Conversation) request.getAttribute("conversation");
 List<Message> messages = (List<Message>) request.getAttribute("messages");
-List<String> usernames = (List<String>) request.getAttribute("usernames"); 
+
+HashMap<UUID, Boolean> allowedUsers = conversation.getAllowedUsers(); 
+List<String> usernames = new ArrayList<String>(); 
+for (UUID id : allowedUsers.keySet())
+  usernames.add(UserStore.getInstance().getUser(id).getName());
+
 StylizedTextParser messageParser = new StylizedTextParser(); 
 %>
 
@@ -26,8 +34,8 @@ StylizedTextParser messageParser = new StylizedTextParser();
 <html>
 <head>
   <title><%= conversation.getTitle() %></title>
-  <link rel="stylesheet" href="/css/main.css" type="text/css">
-
+  <link href="https://fonts.googleapis.com/css?family=Oxygen|Pacifico" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
   <style>
     #chat {
       background-color: white;
@@ -47,7 +55,7 @@ StylizedTextParser messageParser = new StylizedTextParser();
 <body onload="scrollChat()">
 
   <nav>
-   <a id="navTitle" href="/">CodeU Chat App</a>
+   <a id="navTitle" href="/">Gossip Guru</a>
    <a href="/conversations">Conversations</a>
    <% if(request.getSession().getAttribute("user") != null){ %>
      <a>Hello <%= request.getSession().getAttribute("user") %>!</a>
@@ -80,7 +88,7 @@ StylizedTextParser messageParser = new StylizedTextParser();
    <li><code>Code:  </code> &#39;code&#39;</li> 
   </ul>
 
-    <div id="chat">
+    <div style="padding: 10px" id="chat">
       <ul>
     <%
       for (Message message : messages) {
@@ -100,13 +108,12 @@ StylizedTextParser messageParser = new StylizedTextParser();
     
     <% if (request.getSession().getAttribute("user") != null) { %>
     <form action="/chat/<%= conversation.getTitle() %>" method="POST">
-        <input type="text" name="message">
-        <br/>
-        <button type="submit">Send</button>
+        <input id="input-text-long" type="text" name="message">
+        <button id="submit-button" type="submit">Send</button>
     </form>
     <% if (conversation.getType().equals("private")) { %>
     <hr/>
-    <h2 style="color:purple">Plan a Surprise</h2>
+    <h2 style="color:purple; font-weight: bold">Plan a Surprise</h2>
     <p><i>Surprise a friend by adding them to this conversation to join the fun!</i></p>
     
     <% if (request.getAttribute("invalid") != null) { %>
@@ -116,13 +123,13 @@ StylizedTextParser messageParser = new StylizedTextParser();
     <form action="/chat/<%= conversation.getTitle() %>" method="POST">
       <div class="form-group">
             <label class="form-control-label">Username:</label>
-          <input type="text" name="username">
+          <input id="input-text" type="text" name="username">
         </div>
-        <button type="submit">Schedule</button>
+        <button id="submit-button" type="submit">Schedule</button>
     </form>
     <hr/>
     <% if (usernames != null) { %>
-    <h2>Chat Members</h2>
+    <h2 style="font-weight: bold">Chat Members</h2>
     <ul>
       <% for (String username : usernames) { %>
       <li><%= username %></li>
