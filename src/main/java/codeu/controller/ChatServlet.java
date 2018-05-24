@@ -194,16 +194,18 @@ public class ChatServlet extends HttpServlet {
         return;
       }
       
+      // Cannot add yourself
       else if (surprisedUser.getId().equals(user.getId())) {
-        // user cannot add himself to the chat 
-        response.sendRedirect("/chat/" + conversationTitle); 
+          request.setAttribute("invalid", "You are already in the chat."); 
+          request.getRequestDispatcher("/WEB-INF/view/chat.jsp").forward(request, response); 
         return; 
       }
 
+      // Don't add existing users that are already in the chat
       for (UUID id : allowedUsers.keySet()) {
         if (surprisedUser.getId().equals(id)) {
-          // user cannot re-add a current member of that chat
-          response.sendRedirect("/chat/" + conversationTitle); 
+            request.setAttribute("invalid", "User is already in the chat."); 
+            request.getRequestDispatcher("/WEB-INF/view/chat.jsp").forward(request, response); 
           return; 
         }
       }
