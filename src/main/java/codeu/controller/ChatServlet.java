@@ -103,9 +103,25 @@ public class ChatServlet extends HttpServlet {
     HashMap<UUID, Boolean> allowedUsers = conversation.getAllowedUsers(); 
     List<String> allowedUsernames = new ArrayList<String>(); 
     if (conversation.getType().equals("private")) {
-      for (UUID id : allowedUsers.keySet()) {
-        allowedUsernames.add(userStore.getUser(id).getName()); 
-      }
+        
+        // User isn't logged in. Set error
+        if (request.getSession().getAttribute("user") == null)
+        {
+            request.setAttribute("error", "You do not have permissions to view this chat");
+        }
+        
+        else if (allowedUsers.containsKey(userStore.getUser((String)request.getSession().getAttribute("user")).getId()))
+        {
+            for (UUID id : allowedUsers.keySet()) 
+                allowedUsernames.add(userStore.getUser(id).getName()); 
+        }
+        
+        // User isn't part of the allowed group. Set error
+        else
+        {
+            request.setAttribute("error", "You do not have permissions to view this chat");
+        }
+            
     }
     else
       allowedUsernames = null; 

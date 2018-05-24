@@ -75,6 +75,9 @@ StylizedTextParser messageParser = new StylizedTextParser();
   </nav>
 
   <div id="container">
+   <% if(request.getAttribute("error") != null){ %>
+   		<h2 style="color:red"><%= request.getAttribute("error") %></h2>
+   <% } else { %>
 
     <h1><%= conversation.getTitle() %>
       <a href="" style="float: right">&#8635;</a></h1>
@@ -150,6 +153,7 @@ StylizedTextParser messageParser = new StylizedTextParser();
     <% } %>
 
     <hr/>
+  <% } %>
   </div>
 
 </body>
