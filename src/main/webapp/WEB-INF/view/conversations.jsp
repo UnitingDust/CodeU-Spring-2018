@@ -25,7 +25,11 @@
 </head>
 <body>
   <nav>
-    <a id="navTitle" href="/">Gossip Guru</a>
+  	<% if(request.getSession().getAttribute("user") != null){ %>
+		<a id="navTitle" href="/conversations">Gossip Guru</a>   
+	<% } else{ %>
+    	<a id="navTitle" href="/">Gossip Guru</a>
+   	<% } %>
    <a href="/conversations">Conversations</a>
    <% if(request.getSession().getAttribute("user") != null){ %>
      <a>Hello <%= request.getSession().getAttribute("user") %>!</a>
