@@ -71,11 +71,11 @@ public class User {
     hasNotification = true;
   }
 
- //make and retunr notif
-    public Notification makeNotification( String title, String msg){
-    notif = new Notification(this,title,msg);
-    this.setNotificationTrue();
-    return notif;
+  // Make and return notification
+  public Notification makeNotification( String title, String msg){
+      notif = new Notification(this,title,msg);
+      this.setNotificationTrue();
+      return notif;
   }
 
 }

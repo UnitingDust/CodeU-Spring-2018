@@ -98,7 +98,6 @@ public class ChatServlet extends HttpServlet {
     }
 
     UUID conversationId = conversation.getId();
-
     List<Message> messages = messageStore.getMessagesInConversation(conversationId);
 
     HashMap<UUID, Boolean> allowedUsers = conversation.getAllowedUsers(); 
@@ -145,47 +144,61 @@ public class ChatServlet extends HttpServlet {
     String conversationTitle = requestUrl.substring("/chat/".length());
 
     Conversation conversation = conversationStore.getConversationWithTitle(conversationTitle);
+    request.setAttribute("conversation", conversation);
+    
     if (conversation == null) {
-      // couldn't find conversation, redirect to conversation list
-      response.sendRedirect("/conversations");
-      return;
-    }
+        // couldn't find conversation, redirect to conversation list
+        response.sendRedirect("/conversations");
+        return;
+      }
+    
+    UUID conversationId = conversation.getId();
+    List<Message> messages = messageStore.getMessagesInConversation(conversationId); 
+    request.setAttribute("messages", messages);
 
+    HashMap<UUID, Boolean> allowedUsers = conversation.getAllowedUsers(); 
+    List<String> allowedUsernames = new ArrayList<String>(); 
+    if (conversation.getType().equals("private")) {
+      for (UUID id : allowedUsers.keySet()) {
+        allowedUsernames.add(userStore.getUser(id).getName()); 
+      }
+    }
+    else
+      allowedUsernames = null; 
+
+    request.setAttribute("usernames", allowedUsernames); 
     String messageContent = request.getParameter("message");
 
     // empty message, so post request came from Surprise submit button 
     if (messageContent == null) {
-      if (!conversation.isAdmin(user.getId())) {
-        // user is not an admin, so cannot add other users 
+      if (!conversation.isAdmin(user.getId())) {        
         request.setAttribute("error", "Cannot access admin privileges of this chat"); 
-        //request.getRequestDispatcher("/WEB-INF/view/chat.jsp").forward(request, response); - TODO: forward request to show error message
-        response.sendRedirect("/chat/" + conversationTitle);
+        request.getRequestDispatcher("/WEB-INF/view/chat.jsp").forward(request, response);
         return; 
       }
       
       String surprisedUsername = request.getParameter("username");  
+      
+      // nothing entered
       if (surprisedUsername == null || surprisedUsername.length() == 0) {
-        // nothing entered
         response.sendRedirect("/chat/" + conversationTitle); 
         return; 
       }
 
       User surprisedUser = userStore.getUser(surprisedUsername); 
-      if (surprisedUser == null) {
-        // user not found 
-        response.sendRedirect("/chat/" + conversationTitle); 
-        return; 
+      
+      // User not found 
+      if (surprisedUser == null) {          
+        request.setAttribute("invalid", "Cannot find specified user. Please enter a valid user."); 
+        request.getRequestDispatcher("/WEB-INF/view/chat.jsp").forward(request, response);
       }
-
-      System.out.println("id " +  surprisedUser.getId()); 
-      System.out.println(" user id " + user.getId()); 
-      if (surprisedUser.getId().equals(user.getId())) {
+      
+      else if (surprisedUser.getId().equals(user.getId())) {
         // user cannot add himself to the chat 
         response.sendRedirect("/chat/" + conversationTitle); 
         return; 
       }
 
-      HashMap<UUID, Boolean> allowedUsers = conversation.getAllowedUsers(); 
       for (UUID id : allowedUsers.keySet()) {
         if (surprisedUser.getId().equals(id)) {
           // user cannot re-add a current member of that chat
@@ -204,6 +217,13 @@ public class ChatServlet extends HttpServlet {
       //surprisedUser.makeNotification("Surprise!", "Welcome to " + conversationTitle);  
       //request.setAttribute("message", "Surprise for "  + username + " scheduled for " + Calendar); 
       response.sendRedirect("/chat/" + conversationTitle);
+    }
+    
+    else if (messageContent.length() == 0)
+    {
+        response.sendRedirect("/chat/" + conversationTitle);
+        System.out.println("Empty message");
+        return;
     }
     
     //creates the new message
