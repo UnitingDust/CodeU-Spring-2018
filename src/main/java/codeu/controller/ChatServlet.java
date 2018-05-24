@@ -191,6 +191,7 @@ public class ChatServlet extends HttpServlet {
       if (surprisedUser == null) {          
         request.setAttribute("invalid", "Cannot find specified user. Please enter a valid user."); 
         request.getRequestDispatcher("/WEB-INF/view/chat.jsp").forward(request, response);
+        return;
       }
       
       else if (surprisedUser.getId().equals(user.getId())) {
