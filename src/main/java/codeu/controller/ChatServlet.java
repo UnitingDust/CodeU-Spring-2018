@@ -1,4 +1,4 @@
-// Copyright 2017 Google Inc.
+/// Copyright 2017 Google Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -30,6 +30,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+ import codeu.controller.Notification;
 
 import com.google.appengine.api.datastore.EntityNotFoundException;
 
@@ -233,7 +234,7 @@ public class ChatServlet extends HttpServlet {
         e.printStackTrace();
       }
 
-      //surprisedUser.makeNotification("Surprise!", "Welcome to " + conversationTitle);  
+      surprisedUser.makeNotification(conversation, "Surprise!", "Welcome to " + conversationTitle);  
       //request.setAttribute("message", "Surprise for "  + username + " scheduled for " + Calendar); 
       response.sendRedirect("/chat/" + conversationTitle);
     }
