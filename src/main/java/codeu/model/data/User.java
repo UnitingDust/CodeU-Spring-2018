@@ -38,7 +38,7 @@ public class User {
   public User(UUID id, String name, String password, Instant creation) {
     this.id = id;
     this.name = name;
-	this.password = password; 
+  this.password = password; 
     this.creation = creation;
     hasNotification = false;
   }
@@ -67,14 +67,18 @@ public class User {
     return hasNotification;
   }
 
-  public void setNotificationTrue(){
-    hasNotification = true;
+  public void setNotification(boolean value){
+    hasNotification = value;
   }
 
  //make and retunr notif
-    public Notification makeNotification( String title, String msg){
-    notif = new Notification(this,title,msg);
-    this.setNotificationTrue();
+    public Notification makeNotification( Conversation groupChat, String title, String msg){
+    notif = new Notification(this, groupChat, title,msg);
+    this.setNotification(true);
+    return notif;
+  }
+
+  public Notification getNotification(){
     return notif;
   }
 

@@ -5,27 +5,30 @@
 <%@ page import="codeu.controller.Notification" %>
 <%@ page import="codeu.model.data.User" %>
 <%@ page import="codeu.model.store.basic.UserStore" %>
+<%@ page import="codeu.model.store.basic.ConversationStore" %>
+<%@ page import="codeu.model.data.Conversation" %>
 
 <%
 String username = (String) request.getAttribute("username");
 String description = (String) request.getAttribute("description");
 List<Message> messages = (List<Message>) request.getAttribute("messages");
  User user = (User) UserStore.getInstance().getUser(username);
- Notification notification = (Notification) new Notification(user,"test", "hello user");
-user.makeNotification("test", "hello user");
+ Conversation fakeConvo = (Conversation) ConversationStore.getInstance().getConversationWithTitle("groupChat");
+ Conversation conversation = (Conversation) request.getAttribute("conversation");
+//Notification notification =  user.makeNotification(fakeConvo, "test", "hello user");
 %>
 
 <!DOCTYPE html>
 <html>
 
 <head>
-	<title>Profile</title>
-  <link href="https://fonts.googleapis.com/css?family=Oxygen|Pacifico" rel="stylesheet">
+  <title>Profile</title>
+ <link href="https://fonts.googleapis.com/css?family=Oxygen|Pacifico" rel="stylesheet">
   <link rel="stylesheet" href="/css/style.css">
-	<style>		
+
+  <style>   
   #chat {
    background-color: white;
-   color: black;
    height: 200px;
    overflow-y: scroll
  }
@@ -45,15 +48,14 @@ user.makeNotification("test", "hello user");
 
 .sidenav {
   width: 250px;
-  height: 2450px;
+  height: 75%;
   position: fixed;
   z-index: 1;
   top: 100px;
-  right: 10px;
+  left: 0;
   background-color: #eee;
   overflow-x: hidden;
   padding: 8px 0;
-  text-align: center;
 }
 
 .sidenav a {
@@ -69,7 +71,7 @@ user.makeNotification("test", "hello user");
   color: #064579;
 }
 @media screen and (max-height: 500px) {
-  .sidenav {padding-top: 0px;}
+  .sidenav {padding-top: 15px;}
   .sidenav a {font-size: 18px;}
 }
 </style>
@@ -90,15 +92,16 @@ user.makeNotification("test", "hello user");
    <a href="/about.jsp">About</a>
    <% if(request.getSession().getAttribute("user") != null){ %>
    <a href="/profile/<%= request.getSession().getAttribute("user") %>">Profile</a>
-   <a href="/logout.jsp">Logout</a>
    <% } %>
  </nav>
  <div class="sidenav">
   <h2><%= username %>'s Notifications</h2> 
 
   <% if(user.hasNotification()){ %>
-  <img " src="https://cdn.dribbble.com/users/89254/screenshots/2712352/rate-star.gif" width="250" height="150"> 
-  <dialog open> <p>Hi <%= username %>! <br/>You've been surprised by your friends. Check out the groupchat!  <br/> <b>Surprise Title: </b> <i><%=notification.getTitle()%> </i><br/> <b>Message: </b> <i> <%=notification.getMessage() %> </i></p> </dialog>
+      <img " src="https://cdn.dribbble.com/users/89254/screenshots/2712352/rate-star.gif" width="250" height="150"> 
+  <dialog open> <p>Hi <%= username %>! <br/>You've been surprised by your friends. Check out the groupchat! Click<a href="/chat/<%= user.getNotification().getGroupChat().getTitle()%>">HERE</a>
+   <br/> <b>Surprise Title: </b> <i><%=user.getNotification().getTitle()%> </i><br/> <b>Message: </b> <i> <%=user.getNotification().getMessage() %> </i></p> </dialog>
+   <%user.setNotification(false);%>
   <% }  else{ %>
   <img " src="https://pbs.twimg.com/media/DEcpY-_WAAAAMn5.jpg" width="250" height="150"> 
   <dialog open> <p>Hi <%= username %>! <br/>You have no pending notifications! </p> </dialog>
@@ -125,7 +128,7 @@ user.makeNotification("test", "hello user");
   <form action="/profile/<%= username %>" method="POST">
    <textarea rows="6" cols="90" name="editDescription" placeholder="Limit 250 characters" maxlength="250"></textarea><br>
 
-   <button id="submit-button" type="submit">Submit</button>
+   <button type="submit">Submit</button>
  </form>
  <% } %>
 
@@ -137,7 +140,7 @@ user.makeNotification("test", "hello user");
   <ul>
     <% for (Message message : messages) { %>
     <%
-    Date myDate = Date.from(message.getCreationTime());		
+    Date myDate = Date.from(message.getCreationTime());   
     %>
     <li><b><%= myDate.toString() %></b> <%= ": " + message.getContent() %></li>
     <% } %>
@@ -151,6 +154,7 @@ user.makeNotification("test", "hello user");
 </div>
 </body>
 </html>  
+
 
 
 
