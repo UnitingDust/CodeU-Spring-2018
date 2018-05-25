@@ -135,6 +135,29 @@
         <button id="submit-button" type="submit">Schedule</button>
       </form>
       <hr/>
+
+      <h2 style="color:purple; font-weight: bold">Schedule a Date</h2>
+<% if (conversation.getType().equals("private")) { %>
+    <h3>Enter the Event Surprise Date</h3>
+    <form action="/chat/<%= conversation.getTitle() %>" method="POST">
+        <input id="date" type="date" name="data">
+        <br/>
+        <button type="submit" name="action" value="two">Submit</button>
+    </form>
+
+      </form>
+    
+    <hr/>
+    
+    <h3>Enter the Event Surprise Time</h3>
+    <form action="/chat/<%= conversation.getTitle() %>" method="POST">
+        <input id="event-time" type="time" name="event-time">
+        <br/>
+        <button type="submit" name="action" value="three">Submit</button>
+    </form>
+<%} %>
+<hr/>
+
       <% if (usernames != null) { %>
       <h2 style="font-weight: bold">Chat Members</h2>
       <ul>
