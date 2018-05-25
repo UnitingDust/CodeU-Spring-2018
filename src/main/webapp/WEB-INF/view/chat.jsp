@@ -72,7 +72,9 @@
 
   <div id="container">
    <% if(request.getAttribute("error") != null){ %>
+
    <h2 style="color:red"><%= request.getAttribute("error") %></h2>
+
    <% } else { %>
 
    <h1><%= conversation.getTitle() %>
@@ -112,6 +114,7 @@
       <form action="/chat/<%= conversation.getTitle() %>" method="POST">
         <input id="input-text-long" type="text" name="message">
         <button id="submit-button" type="submit">Send</button>
+
       </form>
       <% if (conversation.getType().equals("private")) { %>
       <%for (UUID id : allowedUsers.keySet())
@@ -148,10 +151,8 @@
   <% } else { %>
   <p><a href="/login">Login</a> to send a message.</p>
   <% } %>
-
   <hr/>
   <% } %>
 </div>
-
 </body>
 </html>

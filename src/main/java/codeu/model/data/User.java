@@ -71,7 +71,7 @@ public class User {
     hasNotification = value;
   }
 
- //make and retunr notif
+ //make and return notif
     public Notification makeNotification( Conversation groupChat, String title, String msg){
     notif = new Notification(this, groupChat, title,msg);
     this.setNotification(true);
