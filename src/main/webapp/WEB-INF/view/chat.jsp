@@ -55,7 +55,11 @@ StylizedTextParser messageParser = new StylizedTextParser();
 <body onload="scrollChat()">
 
   <nav>
-   <a id="navTitle" href="/">Gossip Guru</a>
+  	<% if(request.getSession().getAttribute("user") != null){ %>
+		<a id="navTitle" href="/conversations">Gossip Guru</a>   
+	<% } else{ %>
+    	<a id="navTitle" href="/">Gossip Guru</a>
+   	<% } %>
    <a href="/conversations">Conversations</a>
    <% if(request.getSession().getAttribute("user") != null){ %>
      <a>Hello <%= request.getSession().getAttribute("user") %>!</a>
@@ -71,6 +75,9 @@ StylizedTextParser messageParser = new StylizedTextParser();
   </nav>
 
   <div id="container">
+   <% if(request.getAttribute("error") != null){ %>
+   		<h2 style="color:red"><%= request.getAttribute("error") %></h2>
+   <% } else { %>
 
     <h1><%= conversation.getTitle() %>
       <a href="" style="float: right">&#8635;</a></h1>
@@ -115,6 +122,11 @@ StylizedTextParser messageParser = new StylizedTextParser();
     <hr/>
     <h2 style="color:purple; font-weight: bold">Plan a Surprise</h2>
     <p><i>Surprise a friend by adding them to this conversation to join the fun!</i></p>
+    
+    <% if (request.getAttribute("invalid") != null) { %>
+  	<h2 style="color:red"><%= request.getAttribute("invalid") %></h2>
+  	<% } %>
+  	
     <form action="/chat/<%= conversation.getTitle() %>" method="POST">
       <div class="form-group">
             <label class="form-control-label">Username:</label>
@@ -141,6 +153,7 @@ StylizedTextParser messageParser = new StylizedTextParser();
     <% } %>
 
     <hr/>
+  <% } %>
   </div>
 
 </body>
