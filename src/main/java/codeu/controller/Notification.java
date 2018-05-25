@@ -7,6 +7,7 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import codeu.model.data.Conversation;
 
 public class Notification{
 
@@ -14,7 +15,7 @@ public class Notification{
 	private User userNotified;
 
 //the group chat that added the user and is sending the notification
-	//private GroupChat senderGC;
+	private Conversation senderGC;
 
 //Title of the notification
 	private String notificationTitle;
@@ -23,10 +24,10 @@ public class Notification{
 	private String notificationMsg;
 
 	//Constructor
-	public Notification(User user, String title, String message){
+	public Notification(User user, Conversation grChat, String title, String message){
 
 		userNotified = user;
-		//senderGC = grChat;
+		senderGC = grChat;
 		notificationTitle = title;
 		notificationMsg = message;
 	}
@@ -46,6 +47,10 @@ public class Notification{
 		return userNotified;
 	}
 
+	public UUID getUserID(){
+		return userNotified.getId();
+	}
+
 	//sets the user
 	public void setUser(User newUser){
 		userNotified = newUser;
@@ -60,5 +65,10 @@ public class Notification{
 	public void setMessage(String msg){
 		notificationMsg = msg;
 		
+	}
+
+	//returns the title of the message
+	public Conversation getGroupChat(){
+		return senderGC;
 	}
 }

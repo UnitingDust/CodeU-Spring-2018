@@ -17,6 +17,7 @@ package codeu.controller;
 import codeu.model.data.Profile;
 import codeu.model.data.Message;
 import codeu.model.data.User;
+import codeu.model.data.Conversation;
 import codeu.model.store.basic.ProfileStore;
 import codeu.model.store.basic.UserStore;
 import codeu.model.store.basic.MessageStore;
@@ -142,15 +143,19 @@ public class ProfileServletTest {
 
   @Test
   public void notification(){
+     UUID fakeConversationId = UUID.randomUUID();
    User testUser = new User(UUID.randomUUID(), "test_username", "test_password", Instant.now());
-   testUser.setNotificationTrue();
-   Notification testN =  testUser.makeNotification("testTitle", "testMessage");
+    Conversation fakeConversation =
+        new Conversation(fakeConversationId, UUID.randomUUID(), "test_conversation", Instant.now());
+   testUser.setNotification(true);
+   Notification testN =  testUser.makeNotification(fakeConversation, "testTitle", "testMessage");
    System.out.println("this is the notif titile: " + testN.getTitle());
    System.out.println("this is the notif message: " + testN.getMessage() );
    System.out.println("this is the notif user: " + testN.getUser().getName() );
    Assert.assertEquals("test_username",testN.getUser().getName());
    Assert.assertEquals("testTitle",testN.getTitle());
    Assert.assertEquals("testMessage",testN.getMessage());
+   Assert.assertEquals(true,testUser.hasNotification());
  }
  
 }

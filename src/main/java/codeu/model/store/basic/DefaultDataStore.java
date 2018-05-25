@@ -18,6 +18,7 @@ import codeu.model.data.Conversation;
 import codeu.model.data.Message;
 import codeu.model.data.Profile;
 import codeu.model.data.User;
+import codeu.controller.Notification;
 import codeu.model.store.persistence.PersistentStorageAgent;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -55,6 +56,8 @@ public class DefaultDataStore {
    */
   private int DEFAULT_MESSAGE_COUNT = 100;
 
+  private int DEFAULT_NOTIFICATION_COUNT = 5;
+
   private static DefaultDataStore instance = new DefaultDataStore();
 
   public static DefaultDataStore getInstance() {
@@ -65,6 +68,7 @@ public class DefaultDataStore {
   private List<Conversation> conversations;
   private List<Message> messages;
   private List<Profile> profiles;
+  private List<Notification> notifications;
 
   /** This class is a singleton, so its constructor is private. Call getInstance() instead. */
   private DefaultDataStore() {
@@ -72,6 +76,7 @@ public class DefaultDataStore {
     conversations = new ArrayList<>();
     messages = new ArrayList<>();
     profiles = new ArrayList<>();
+    notifications = new ArrayList<>();
 
     if (USE_DEFAULT_DATA) {
       addRandomUsers();
@@ -97,7 +102,11 @@ public class DefaultDataStore {
   }
   
   public List<Profile> getAllProfiles() {
-	  return profiles;
+    return profiles;
+  }
+
+  public List<Notification> getAllNotifications() {
+    return notifications;
   }
 
   private void addRandomUsers() {
@@ -200,3 +209,4 @@ public class DefaultDataStore {
     return messageContent;
   }
 }
+
