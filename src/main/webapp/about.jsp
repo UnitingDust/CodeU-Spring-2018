@@ -215,7 +215,7 @@ body {
 
        <h1>About Gossip Guru</h1>
     <p>
-      This chat app was created by CodeU Team 32 to make connecting with friends and family more fun!!</p>
+      Gossip Guru was created by CodeU Team 32 to make scheduling surprise events easier and more fun!</p>
 
       <li><strong> Lets meet the team: </strong></li>
 
