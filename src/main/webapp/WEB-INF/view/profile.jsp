@@ -7,7 +7,7 @@
 <%@ page import="codeu.model.store.basic.UserStore" %>
 <%@ page import="codeu.model.store.basic.ConversationStore" %>
 <%@ page import="codeu.model.data.Conversation" %>
-
+<%@ page import="codeu.controller.StylizedTextParser" %>
 <%
 String username = (String) request.getAttribute("username");
 String description = (String) request.getAttribute("description");
@@ -15,6 +15,7 @@ List<Message> messages = (List<Message>) request.getAttribute("messages");
  User user = (User) UserStore.getInstance().getUser(username);
  Conversation fakeConvo = (Conversation) ConversationStore.getInstance().getConversationWithTitle("groupChat");
  Conversation conversation = (Conversation) request.getAttribute("conversation");
+ StylizedTextParser messageParser = new StylizedTextParser();
 %>
 
 <!DOCTYPE html>
@@ -148,7 +149,8 @@ List<Message> messages = (List<Message>) request.getAttribute("messages");
     Date myDate = Date.from(message.getCreationTime());   
     %>
     	<% if (!message.getSecret()) { %>
-    		<li><b><%= myDate.toString() %></b> <%= ": " + message.getContent() %></li>
+    		 <% String parsedContent = messageParser.parse(message.getContent()); %>
+    		<li><b><%= myDate.toString() %></b> <%= ": " + parsedContent %></li>
     	<% }%>
     <% } %>
   </ul>

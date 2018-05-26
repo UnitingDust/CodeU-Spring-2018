@@ -96,12 +96,13 @@
       <ul>
         <%
         for (Message message : messages) {
-        String author = UserStore.getInstance()
-        .getUser(message.getAuthorId()).getName();
-        if (message.getContent() == null)
-            continue; // do not display empty messages for now
-            String parsedContent = messageParser.parse(message.getContent());
-            %>
+        	String author = UserStore.getInstance().getUser(message.getAuthorId()).getName();
+        	
+        	if (message.getContent() == null)
+            	continue; // do not display empty messages for now
+            	
+        	String parsedContent = messageParser.parse(message.getContent());
+        %>
             <li><strong><%= author %>:</strong> <%= parsedContent %></li>
             <%
           }
