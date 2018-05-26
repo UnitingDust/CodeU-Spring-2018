@@ -98,19 +98,20 @@ List<Message> messages = (List<Message>) request.getAttribute("messages");
    <% } %>
    <a href="/logout.jsp">Logout</a>
  </nav>
+ 
  <div class="sidenav">
-  <h2><%= username %>'s Notifications</h2> 
-
-  <% if(user.hasNotification()){ %>
+  <% if(request.getSession().getAttribute("user") != null && request.getSession().getAttribute("user").equals(username)){ %>
+  	<h2><%= username %>'s Notifications</h2> 
+  	<% if(user.hasNotification()){ %>
       <img " src="https://cdn.dribbble.com/users/89254/screenshots/2712352/rate-star.gif" width="250" height="150"> 
-  <dialog open> <p>Hi <%= username %>! <br/>You've been surprised by your friends. Check out the groupchat! Click<a href="/chat/<%= user.getNotification().getGroupChat().getTitle()%>">HERE</a>
-   <br/> <b>Surprise Title: </b> <i><%=user.getNotification().getTitle()%> </i><br/> <b>Message: </b> <i> <%=user.getNotification().getMessage() %> </i></p> </dialog>
-   <%user.setNotification(false);%>
-  <% }  else{ %>
-  <img " src="https://pbs.twimg.com/media/DEcpY-_WAAAAMn5.jpg" width="250" height="150"> 
-  <dialog open> <p>Hi <%= username %>! <br/>You have no pending notifications! </p> </dialog>
-  <% } %>
-
+  	<dialog open> <p>Hi <%= username %>! <br/>You've been surprised by your friends. Check out the groupchat! Click<a href="/chat/<%= user.getNotification().getGroupChat().getTitle()%>">HERE</a>
+   	<br/> <b>Surprise Title: </b> <i><%=user.getNotification().getTitle()%> </i><br/> <b>Message: </b> <i> <%=user.getNotification().getMessage() %> </i></p> </dialog>
+   	<%user.setNotification(false);%>
+  	<% }  else{ %>
+  		<img " src="https://pbs.twimg.com/media/DEcpY-_WAAAAMn5.jpg" width="250" height="150"> 
+  		<dialog open> <p>Hi <%= username %>! <br/>You have no pending notifications! </p> </dialog>
+  	<% } %>
+	<% } %>
 </div>
 
 <div id="container">
