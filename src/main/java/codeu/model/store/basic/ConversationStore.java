@@ -147,4 +147,14 @@ public class ConversationStore {
     conversation.addUser(id); 
     persistentStorageAgent.updateConversation(conversation, id); 
   }
+  
+  public void updateConversationTime(Conversation conversation, UUID id, String time) throws EntityNotFoundException {
+      conversation.time = time;
+      persistentStorageAgent.updateConversationTime(conversation, id, time); 
+  }
+  
+  public void updateConversationDate(Conversation conversation, UUID id, String date) throws EntityNotFoundException {
+      conversation.date = date;
+      persistentStorageAgent.updateConversationDate(conversation, id, date); 
+  }
 }

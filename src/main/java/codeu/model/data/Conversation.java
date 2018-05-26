@@ -34,6 +34,8 @@ public class Conversation {
   public final Instant creation;
   public final String title;
   public final String type; 
+  public String date;
+  public String time;
 
   /* private class for tasks that send a notification and adds user to this conversation at scheduled time */
   private class SurpriseTask extends TimerTask {
