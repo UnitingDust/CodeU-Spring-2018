@@ -15,7 +15,6 @@ List<Message> messages = (List<Message>) request.getAttribute("messages");
  User user = (User) UserStore.getInstance().getUser(username);
  Conversation fakeConvo = (Conversation) ConversationStore.getInstance().getConversationWithTitle("groupChat");
  Conversation conversation = (Conversation) request.getAttribute("conversation");
-//Notification notification =  user.makeNotification(fakeConvo, "test", "hello user");
 %>
 
 <!DOCTYPE html>
@@ -146,7 +145,9 @@ List<Message> messages = (List<Message>) request.getAttribute("messages");
     <%
     Date myDate = Date.from(message.getCreationTime());   
     %>
-    <li><b><%= myDate.toString() %></b> <%= ": " + message.getContent() %></li>
+    	<% if (!message.getSecret()) { %>
+    		<li><b><%= myDate.toString() %></b> <%= ": " + message.getContent() %></li>
+    	<% }%>
     <% } %>
   </ul>
 </div>

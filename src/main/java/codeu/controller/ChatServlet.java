@@ -144,6 +144,7 @@ public class ChatServlet extends HttpServlet {
       throws IOException, ServletException {
 
     String username = (String) request.getSession().getAttribute("user");
+    
     if (username == null) {
       // user is not logged in, don't let them add a message
       response.sendRedirect("/login");
@@ -235,7 +236,6 @@ public class ChatServlet extends HttpServlet {
       }
 
       surprisedUser.makeNotification(conversation, "Surprise!", "Welcome to " + conversationTitle);  
-      //request.setAttribute("message", "Surprise for "  + username + " scheduled for " + Calendar); 
       response.sendRedirect("/chat/" + conversationTitle);
     }
     
@@ -246,6 +246,8 @@ public class ChatServlet extends HttpServlet {
         return;
     }
     
+    Boolean secret = conversation.type.equals("private");
+    
     //creates the new message
     Message message =
         new Message(
@@ -253,7 +255,8 @@ public class ChatServlet extends HttpServlet {
             conversation.getId(),
             user.getId(),
             messageContent,
-            Instant.now());
+            Instant.now(),
+            secret);
 
     messageStore.addMessage(message);
 
