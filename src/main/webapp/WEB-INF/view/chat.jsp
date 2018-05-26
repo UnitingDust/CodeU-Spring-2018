@@ -92,16 +92,26 @@
       <li><u>Underline:  </u> -underline-</li>
       <li><code>Code:  </code> &#39;code&#39;</li> 
     </ul>
+    
+    <% if (conversation.time != null) { %>
+    	<h2 style="color:pink">Current Set Time: <%= conversation.time %></h2>
+    <% } %>
+    
+    <% if (conversation.date != null) { %>
+    	<h2 style="color:pink">Current Set Date: <%= conversation.date %></h2>
+    <% } %>
+    
     <div style="padding: 10px" id="chat">
       <ul>
         <%
         for (Message message : messages) {
-        String author = UserStore.getInstance()
-        .getUser(message.getAuthorId()).getName();
-        if (message.getContent() == null)
-            continue; // do not display empty messages for now
-            String parsedContent = messageParser.parse(message.getContent());
-            %>
+        	String author = UserStore.getInstance().getUser(message.getAuthorId()).getName();
+        	
+        	if (message.getContent() == null)
+            	continue; // do not display empty messages for now
+            	
+        	String parsedContent = messageParser.parse(message.getContent());
+        %>
             <li><strong><%= author %>:</strong> <%= parsedContent %></li>
             <%
           }
@@ -140,7 +150,7 @@
 <% if (conversation.getType().equals("private")) { %>
     <h3>Enter the Event Surprise Date</h3>
     <form action="/chat/<%= conversation.getTitle() %>" method="POST">
-        <input id="date" type="date" name="data">
+        <input id="date" type="date" name="date">
         <br/>
         <button type="submit" name="action" value="two">Submit</button>
     </form>
@@ -149,9 +159,10 @@
     
     <hr/>
     
+    <h2 style="color:purple; font-weight: bold">Schedule a Time</h2>
     <h3>Enter the Event Surprise Time</h3>
     <form action="/chat/<%= conversation.getTitle() %>" method="POST">
-        <input id="event-time" type="time" name="event-time">
+        <input id="event-time" type="time" name="time">
         <br/>
         <button type="submit" name="action" value="three">Submit</button>
     </form>

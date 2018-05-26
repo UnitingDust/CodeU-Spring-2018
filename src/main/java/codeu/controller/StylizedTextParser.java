@@ -50,7 +50,7 @@ public class StylizedTextParser {
                 else { /* found end of stylized text */
                     String HTMLTag = MarkdownHTMLMapping.get(styleMarker.pop()); 
                     HTMLMessage.append("<" + HTMLTag + ">" + messageBuffer + "</" + HTMLTag + ">"); 
-                    messageBuffer = new StringBuffer(); // TODO change to handle different embedded markdown elements 
+                    messageBuffer = new StringBuffer(); 
                 }
             }
             else {

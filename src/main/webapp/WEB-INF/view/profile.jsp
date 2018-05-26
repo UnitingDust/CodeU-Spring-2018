@@ -7,7 +7,7 @@
 <%@ page import="codeu.model.store.basic.UserStore" %>
 <%@ page import="codeu.model.store.basic.ConversationStore" %>
 <%@ page import="codeu.model.data.Conversation" %>
-
+<%@ page import="codeu.controller.StylizedTextParser" %>
 <%
 String username = (String) request.getAttribute("username");
 String description = (String) request.getAttribute("description");
@@ -15,7 +15,7 @@ List<Message> messages = (List<Message>) request.getAttribute("messages");
  User user = (User) UserStore.getInstance().getUser(username);
  Conversation fakeConvo = (Conversation) ConversationStore.getInstance().getConversationWithTitle("groupChat");
  Conversation conversation = (Conversation) request.getAttribute("conversation");
-//Notification notification =  user.makeNotification(fakeConvo, "test", "hello user");
+ StylizedTextParser messageParser = new StylizedTextParser();
 %>
 
 <!DOCTYPE html>
@@ -97,20 +97,22 @@ List<Message> messages = (List<Message>) request.getAttribute("messages");
    <% if(request.getSession().getAttribute("user") != null){ %>
    <a href="/profile/<%= request.getSession().getAttribute("user") %>">Profile</a>
    <% } %>
+   <a href="/logout.jsp">Logout</a>
  </nav>
+ 
  <div class="sidenav">
-  <h2><%= username %>'s Notifications</h2> 
-
-  <% if(user.hasNotification()){ %>
+  <% if(request.getSession().getAttribute("user") != null && request.getSession().getAttribute("user").equals(username)){ %>
+  	<h2><%= username %>'s Notifications</h2> 
+  	<% if(user.hasNotification()){ %>
       <img " src="https://cdn.dribbble.com/users/89254/screenshots/2712352/rate-star.gif" width="250" height="150"> 
-  <dialog open> <p>Hi <%= username %>! <br/>You've been surprised by your friends. Check out the groupchat! Click<a href="/chat/<%= user.getNotification().getGroupChat().getTitle()%>">HERE</a>
-   <br/> <b>Surprise Title: </b> <i><%=user.getNotification().getTitle()%> </i><br/> <b>Message: </b> <i> <%=user.getNotification().getMessage() %> </i></p> </dialog>
-   <%user.setNotification(false);%>
-  <% }  else{ %>
-  <img " src="https://pbs.twimg.com/media/DEcpY-_WAAAAMn5.jpg" width="250" height="150"> 
-  <dialog open> <p>Hi <%= username %>! <br/>You have no pending notifications! </p> </dialog>
-  <% } %>
-
+  	<dialog open> <p>Hi <%= username %>! <br/>You've been surprised by your friends. Check out the groupchat! Click<a href="/chat/<%= user.getNotification().getGroupChat().getTitle()%>">HERE</a>
+   	<br/> <b>Surprise Title: </b> <i><%=user.getNotification().getTitle()%> </i><br/> <b>Message: </b> <i> <%=user.getNotification().getMessage() %> </i></p> </dialog>
+   	<%user.setNotification(false);%>
+  	<% }  else{ %>
+  		<img " src="https://pbs.twimg.com/media/DEcpY-_WAAAAMn5.jpg" width="250" height="150"> 
+  		<dialog open> <p>Hi <%= username %>! <br/>You have no pending notifications! </p> </dialog>
+  	<% } %>
+	<% } %>
 </div>
 
 <div id="container">
@@ -146,7 +148,10 @@ List<Message> messages = (List<Message>) request.getAttribute("messages");
     <%
     Date myDate = Date.from(message.getCreationTime());   
     %>
-    <li><b><%= myDate.toString() %></b> <%= ": " + message.getContent() %></li>
+    	<% if (!message.getSecret()) { %>
+    		 <% String parsedContent = messageParser.parse(message.getContent()); %>
+    		<li><b><%= myDate.toString() %></b> <%= ": " + parsedContent %></li>
+    	<% }%>
     <% } %>
   </ul>
 </div>

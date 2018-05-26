@@ -76,7 +76,7 @@ public class ProfileServletTest {
   public void testDoGetValidProfile() throws IOException, ServletException {
     List<Message> fakeMessageList = new ArrayList<>();
     fakeMessageList.add(
-        new Message(UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID(), "test_message",  Instant.now()));
+        new Message(UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID(), "test_message",  Instant.now(), true));
     
     User user = new User(UUID.randomUUID(), "test_username", "test_password", Instant.now());
     Profile profile = new Profile(user.getId(), "test_description");

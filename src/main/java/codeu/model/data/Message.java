@@ -26,6 +26,7 @@ public class Message implements Comparable<Message>{
   private final UUID author;
   private final String content;
   private final Instant creation;
+  private final Boolean secret;
 
   /**
    * Constructs a new Message.
@@ -35,13 +36,15 @@ public class Message implements Comparable<Message>{
    * @param author the ID of the User who sent this Message
    * @param content the text content of this Message
    * @param creation the creation time of this Message
+   * @param secret true if private, false if public
    */
-  public Message(UUID id, UUID conversation, UUID author, String content, Instant creation) {
+  public Message(UUID id, UUID conversation, UUID author, String content, Instant creation, Boolean secret) {
     this.id = id;
     this.conversation = conversation;
     this.author = author;
     this.content = content;
     this.creation = creation;
+    this.secret = secret;
   }
 
   /** Returns the ID of this Message. */
@@ -67,6 +70,11 @@ public class Message implements Comparable<Message>{
   /** Returns the creation time of this Message. */
   public Instant getCreationTime() {
     return creation;
+  }
+  
+  /** Return whether or not this Message is private or public **/
+  public Boolean getSecret() {
+      return secret;
   }
 
 

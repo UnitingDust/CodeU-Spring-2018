@@ -144,6 +144,7 @@ public class ChatServlet extends HttpServlet {
       throws IOException, ServletException {
 
     String username = (String) request.getSession().getAttribute("user");
+
     if (username == null) {
       // user is not logged in, don't let them add a message
       response.sendRedirect("/login");
@@ -185,9 +186,37 @@ public class ChatServlet extends HttpServlet {
 
     request.setAttribute("usernames", allowedUsernames); 
     String messageContent = request.getParameter("message");
+    String date = request.getParameter("date");
+    String time = request.getParameter("time");
 
     // empty message, so post request came from Surprise submit button 
     if (messageContent == null) {
+        
+        // Time got set
+        if (time != null)
+        {
+            try {
+                conversationStore.updateConversationTime(conversation, conversationId, time);
+            } catch (EntityNotFoundException e) {
+                e.printStackTrace();
+            }
+            
+            response.sendRedirect("/chat/" + conversationTitle); 
+            return;
+        }
+        
+        // Date got set
+        else if (date != null)
+        {
+            try {
+                conversationStore.updateConversationDate(conversation, conversationId, date);
+            } catch (EntityNotFoundException e) {
+                e.printStackTrace();
+            }
+            response.sendRedirect("/chat/" + conversationTitle); 
+            return;
+        }
+        
       if (!conversation.isAdmin(user.getId())) {        
         request.setAttribute("error", "Cannot access admin privileges of this chat"); 
         request.getRequestDispatcher("/WEB-INF/view/chat.jsp").forward(request, response);
@@ -201,7 +230,7 @@ public class ChatServlet extends HttpServlet {
         response.sendRedirect("/chat/" + conversationTitle); 
         return; 
       }
-
+      
       User surprisedUser = userStore.getUser(surprisedUsername); 
       
       // User not found 
@@ -235,16 +264,16 @@ public class ChatServlet extends HttpServlet {
       }
 
       surprisedUser.makeNotification(conversation, "Surprise!", "Welcome to " + conversationTitle);  
-      //request.setAttribute("message", "Surprise for "  + username + " scheduled for " + Calendar); 
       response.sendRedirect("/chat/" + conversationTitle);
     }
     
     else if (messageContent.length() == 0)
     {
         response.sendRedirect("/chat/" + conversationTitle);
-        System.out.println("Empty message");
         return;
     }
+    
+    Boolean secret = conversation.type.equals("private");
     
     //creates the new message
     Message message =
@@ -253,7 +282,8 @@ public class ChatServlet extends HttpServlet {
             conversation.getId(),
             user.getId(),
             messageContent,
-            Instant.now());
+            Instant.now(),
+            secret);
 
     messageStore.addMessage(message);
 

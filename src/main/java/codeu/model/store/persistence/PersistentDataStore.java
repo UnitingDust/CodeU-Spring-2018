@@ -110,7 +110,13 @@ public class PersistentDataStore {
         String title = (String) entity.getProperty("title");
         Instant creationTime = Instant.parse((String) entity.getProperty("creation_time"));
         String conversationType = (String) entity.getProperty("conversationType"); 
+        String date = (String) entity.getProperty("date"); 
+        String time = (String) entity.getProperty("time");
+        
         Conversation conversation = new Conversation(uuid, ownerUuid, title, creationTime, conversationType);
+        conversation.date = date;
+        conversation.time = time;
+        
         // load allowed users from embedded entity 
         EmbeddedEntity ee = (EmbeddedEntity) entity.getProperty("allowedUsers");  
         if (ee != null) {
@@ -155,7 +161,8 @@ public class PersistentDataStore {
         UUID authorUuid = UUID.fromString((String) entity.getProperty("author_uuid"));
         Instant creationTime = Instant.parse((String) entity.getProperty("creation_time"));
         String content = (String) entity.getProperty("content");
-        Message message = new Message(uuid, conversationUuid, authorUuid, content, creationTime);
+        Boolean secret = (Boolean)entity.getProperty("secret");
+        Message message = new Message(uuid, conversationUuid, authorUuid, content, creationTime, secret);
         messages.add(message);
       } catch (Exception e) {
         // In a production environment, errors should be very rare. Errors which may
@@ -219,6 +226,7 @@ public class PersistentDataStore {
     messageEntity.setProperty("author_uuid", message.getAuthorId().toString());
     messageEntity.setProperty("content", message.getContent());
     messageEntity.setProperty("creation_time", message.getCreationTime().toString());
+    messageEntity.setProperty("secret", message.getSecret());
     datastore.put(messageEntity);
   }
 
@@ -229,7 +237,10 @@ public class PersistentDataStore {
     conversationEntity.setProperty("owner_uuid", conversation.getOwnerId().toString());
     conversationEntity.setProperty("title", conversation.getTitle());
     conversationEntity.setProperty("creation_time", conversation.getCreationTime().toString());
-    conversationEntity.setProperty("conversationType", conversation.getType()); 
+    conversationEntity.setProperty("conversationType", conversation.getType());
+    conversationEntity.setProperty("date", conversation.date);
+    conversationEntity.setProperty("time", conversation.time);
+
     HashMap<UUID, Boolean> allowedUsers = conversation.getAllowedUsers(); 
     EmbeddedEntity ee; 
     if (allowedUsers != null) {
@@ -254,6 +265,26 @@ public class PersistentDataStore {
     EmbeddedEntity ee = (EmbeddedEntity) conversationEntity.getProperty("allowedUsers"); 
     ee.setProperty(id.toString(), allowedUsers.get(id));  
     conversationEntity.setProperty("allowedUsers", ee); 
+
+    datastore.put(conversationEntity); 
+  }
+  
+  /** Update a Conversation object in the Datastore service **/
+  public void updateConversationDate(Conversation conversation, UUID id, String date) throws EntityNotFoundException {
+    Key key = KeyFactory.createKey("chat-conversations", conversation.getId().toString());
+    
+    Entity conversationEntity = datastore.get(key);
+    conversationEntity.setProperty("date", date);
+
+    datastore.put(conversationEntity);
+  }
+  
+  /** Update a Conversation object in the Datastore service **/
+  public void updateConversationTime(Conversation conversation, UUID id, String time) throws EntityNotFoundException {
+    Key key = KeyFactory.createKey("chat-conversations", conversation.getId().toString());
+    
+    Entity conversationEntity = datastore.get(key);
+    conversationEntity.setProperty("time", time);
 
     datastore.put(conversationEntity); 
   }

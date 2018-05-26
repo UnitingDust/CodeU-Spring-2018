@@ -118,6 +118,16 @@ public class PersistentStorageAgent {
   public void updateConversation(Conversation conversation, UUID id) throws EntityNotFoundException {
     persistentDataStore.updateConversation(conversation, id);
   }
+  
+  /** Update a Conversation object to the Datastore service. */
+  public void updateConversationTime(Conversation conversation, UUID id, String time) throws EntityNotFoundException {
+    persistentDataStore.updateConversationTime(conversation, id, time);
+  }
+  
+  /** Update a Conversation object to the Datastore service. */
+  public void updateConversationDate(Conversation conversation, UUID id, String date) throws EntityNotFoundException {
+    persistentDataStore.updateConversationDate(conversation, id, date);
+  }
 
   /** Write a Message object to the Datastore service. */
   public void writeThrough(Message message) {

@@ -148,7 +148,7 @@ public class DefaultDataStore {
 
       Message message =
           new Message(
-              UUID.randomUUID(), conversation.getId(), author.getId(), content, Instant.now());
+              UUID.randomUUID(), conversation.getId(), author.getId(), content, Instant.now(), true);
       PersistentStorageAgent.getInstance().writeThrough(message);
       messages.add(message);
     }
