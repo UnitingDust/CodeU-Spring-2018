@@ -96,6 +96,7 @@ List<Message> messages = (List<Message>) request.getAttribute("messages");
    <% if(request.getSession().getAttribute("user") != null){ %>
    <a href="/profile/<%= request.getSession().getAttribute("user") %>">Profile</a>
    <% } %>
+   <a href="/logout.jsp">Logout</a>
  </nav>
  <div class="sidenav">
   <h2><%= username %>'s Notifications</h2> 
