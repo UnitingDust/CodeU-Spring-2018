@@ -2,7 +2,7 @@
 
 Hello! Welcome to Team 32, a.k.a Team Gossip Guru, Chat Applet! This was made over a 12 week period in the Google CodeU Program Spring 2018. The team consisted of a Google Engineer and 4 undergraduate CS students. We were given a barebone chat applet and left to our imagination on how we wanted to customize the chat applet. Not only did Team Gossip Guru redesigned the UI, we also added Profile Pages, Notifications, and Private Conversations. Our goal, as hinted by our team name, was the ability for people to plan surprise events for their friends. 
 
-A live production site can be found here: http://gossip-guru-206201.appspot.com/
+A live production site can be found here: http://gossip-guru-206201.appspot.com/.
 Steps to host a local server can also be found below. 
 
 ----------------------------------------------------------------------------------------------------------------------------------------
