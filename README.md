@@ -1,8 +1,11 @@
-# CodeU Example Project
+# CodeU Spring 2018 Chat Applet
 
-This is an example chat application. It's complete and functional, but leaves
-plenty of room for improvement.
+Hello! Welcome to Team 32, a.k.a Team Gossip Guru, Chat Applet! This was made over a 12 week period in the Google CodeU Program Spring 2018. The team consisted of a Google Engineer and 4 undergraduate CS students. We were given a barebone chat applet and left to our imagination on how we wanted to customize the chat applet. Not only did Team Gossip Guru redesigned the UI, we also added Profile Pages, Notifications, and Private Conversations. Our goal, as hinted by our team name, was the ability for people to plan surprise events for their friends. 
 
+A live production site can be found here: http://gossip-guru-206201.appspot.com/
+Steps to host a local server can also be found below. 
+
+----------------------------------------------------------------------------------------------------------------------------------------
 ## Step 1: Download Java
 
 Check whether you already have Java installed by opening a console and typing:
@@ -56,7 +59,7 @@ If you don't see a version number, then make sure Git is on your `PATH`.
 
 ## Step 4: Setup your repository
 
-Follow the instructions in the first project to get your repository setup.
+Clone this respository onto your local PC. 
 
 ## Step 5: Run a development server
 
